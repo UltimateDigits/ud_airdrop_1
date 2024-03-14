@@ -178,37 +178,49 @@ const submitEmail = async () => {
     
     switch (key) {
       case 1:
-        if (!session) signIn("discord");
-        setStatus((oldVal) => ({ ...oldVal, 1: "checking..." }));
-        if (userData.discord_joined_claim) {
-          setStatus((oldVal) => ({ ...oldVal, 1: "Already Claimed" }));
-          return;
-        } else if (await getUserGuilds(session.accessToken)) {
-          console.log("In here 1");
-          //post req update data
-          await fetch("/api/user/update", {
-            method: "POST",
-            body: JSON.stringify({
-              address: address,
-              discord_joined_claim: true,
-              totalPts: userData.totalPts + 100,
-            }),
-            headers: {
-              Accept: "*/*",
-              "Content-Type": "application/json",
-            },
-          });
-          setStatus((oldVal) => ({ ...oldVal, 1: "Points Claimed" }));
-          return;
-        } else {
-          console.log("In here 2");
-          setStatus((oldVal) => ({
-            ...oldVal,
-            1: "Join Server",
-          }));
-          return;
-        }
-        break;
+    // if (!session) {
+    //   signIn("discord");
+    //   return; // Ensure to return after calling signIn to prevent further execution until the session is established
+    // }
+    
+    setStatus((oldVal) => ({ ...oldVal, 1: "checking..." }));
+    
+    // Add check for discord_id being null or empty
+    if (!userData.discord_id) {
+      console.log("Discord not connected");
+      setStatus((oldVal) => ({ ...oldVal, 1: "Connect Discord first" }));
+      return; // Stop execution if no Discord ID is linked
+    }
+    
+    if (userData.discord_joined_claim) {
+      setStatus((oldVal) => ({ ...oldVal, 1: "Already Claimed" }));
+      return;
+    } else if (await getUserGuilds(session.accessToken)) {
+      console.log("In here 1");
+      //post req to update data
+      await fetch("/api/user/update", {
+        method: "POST",
+        body: JSON.stringify({
+          address: address,
+          discord_joined_claim: true,
+          totalPts: userData.totalPts + 100,
+        }),
+        headers: {
+          Accept: "*/*",
+          "Content-Type": "application/json",
+        },
+      });
+      setStatus((oldVal) => ({ ...oldVal, 1: "Points Claimed" }));
+      return;
+    } else {
+      console.log("In here 2");
+      setStatus((oldVal) => ({
+        ...oldVal,
+        1: "Join Server",
+      }));
+      return;
+    }
+    break;
 
       case 3:
         if (userData.nft_minted_claim) {
@@ -319,21 +331,21 @@ const submitEmail = async () => {
             {rows.map((row) => (
               <tr className="bg-none text-white text-[18px]" key={row.key}>
                 <td className="px-8 py-4">{row.Quest}
-                  <div className="text-white text-[12px] italic">{row.de1}</div>
+                  <div className="text-white text-[12px] ">{row.de1}</div>
                 </td>
                 <td className="px-8 py-4">{row.Points}
-                  <div className="px-1 text-white text-[12px] italic">{row.de2}</div>
+                  <div className="px-1 text-white text-[12px] ">{row.de2}</div>
                 </td>
                 <td className="px-8 py-4">
                   {isConnected ? (
                     <button
-                      className="px-4 py-2 bg-blue-500 text-white font-bold rounded hover:bg-blue-700 transition duration-300"
+                      className="px-4 py-2 bg-blue-500 text-white font-bold rounded-full hover:bg-blue-700 transition duration-300"
                       onClick={() => claimPoints(row.key)}
                     >
                       {status[row.key]}
                     </button>
                   ) : (
-                    "Connect Wallet"
+                    "*****"
                   )}
                 </td>
               </tr>
