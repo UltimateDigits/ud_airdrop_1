@@ -18,6 +18,7 @@ export const connect = async () => {
     },
     discord_id: {
       type: String,
+      index: { unique: true, dropDups: true },
       default: ''
     },
     totalPts: {type: Number, default: 0},
