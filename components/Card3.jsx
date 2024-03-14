@@ -1,45 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import styles from '../styles/Home.module.css'; // Modify path as needed
 import { useAccount } from 'wagmi'; // Ensure wagmi is properly installed and set up
+import { RefreshCw } from 'react-feather'; // Make sure to install react-feather for icons
 
 const Card3 = () => {
     const { isConnected, address } = useAccount();
     const [points, setPoints] = useState(null);
 
-    useEffect(() => {
+    const fetchPoints = async () => {
         if (isConnected && address) {
-            const fetchData = async () => {
-                try {
-                    const response = await fetch(`/api/user/${address}`);
-                    const data = await response.json();
-                    setPoints(data.totalPts); // Assuming 'totalPts' is the field in your returned json
-                } catch (error) {
-                    console.error("Failed to fetch points:", error);
-                }
-            };
-
-            fetchData();
+            try {
+                const response = await fetch(`/api/user/${address}`);
+                const data = await response.json();
+                setPoints(data.totalPts); // Assuming 'totalPts' is the field in your returned json
+            } catch (error) {
+                console.error("Failed to fetch points:", error);
+            }
         }
-    }, [isConnected, address]); // useEffect will trigger when the connected state or address changes
-
-    // Custom style for the dark gradient background
-    const cardStyle = {
-        background: 'linear-gradient(to right, #1D1D1D, #0577BB)', // Adjust colors as needed
-        borderRadius: '8px',
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-        padding: '20px',
-        color: '#FFFFFF',
-        textAlign: 'left',
-        width: '70%',
-        marginBottom: '50px',
-        minHeight: '200px'
     };
 
-    const scrollToBottom = () => {
-        window.scrollTo({
-            top: document.body.scrollHeight,
-            behavior: "smooth", // For smooth scrolling
-        });
+    useEffect(() => {
+        fetchPoints();
+    }, [isConnected, address]); // useEffect will trigger when the connected state or address changes
+
+    const handleReloadPoints = () => {
+        fetchPoints(); // Re-fetch points when the reload button is clicked
     };
 
     return (
@@ -47,17 +32,28 @@ const Card3 = () => {
             <h3 className="text-[30px] text-white">
                 Your Ultimate Points <span className="font-bold">[Season 1]</span>
             </h3>
-            <div className="my-4">
+            <div className="my-4 flex justify-between items-center">
                 <p className="text-[52px] font-bold text-white">
                     {points !== null ? points : '0'}
                 </p>
+                <button
+                    onClick={handleReloadPoints}
+                    className="text-white bg-blue-500 hover:bg-blue-700 transition-colors cursor-pointer rounded-full p-2"
+                    title="Reload Points"
+                >
+                    <RefreshCw size={24} /> {/* Using React-Feather icon */}
+                </button>
             </div>
             <button
-                onClick={scrollToBottom}
-                className="text-blue-300 hover:text-blue-500 transition-colors cursor-pointer"
-            >
-                Earn More Ultimate Points →
-            </button>
+    onClick={() => window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: "smooth",
+    })}
+    className="text-blue-300 hover:text-blue-500 transition-colors cursor-pointer"
+>
+    Earn More Ultimate Points →
+</button>
+
         </div>
     );
 };
