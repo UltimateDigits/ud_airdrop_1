@@ -12,7 +12,7 @@ Ultimate Digits Airdrop
   <p align="center">
     Airdrop from Ultimate Digits
     <br />
-    <a href="https://docs.google.com/document/d/166svj3HZDXOmNMMbJqZorOYGEmwaTJIg-Tm7uH3xzz4"><strong>Explore the Airdrop docs »</strong></a>
+    <a href="https://www.ultimatedigits.com/#home"><strong>Explore the Airdrop docs »</strong></a>
     <br />
     <br />
     <a href="http://airdrop.ultimatedigits.com/">View Demo</a>
