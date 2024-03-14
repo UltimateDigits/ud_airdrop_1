@@ -85,33 +85,51 @@ const Navbar_comp = () => {
       signOut();
     },
   });
-  useEffect(() => {
-    console.log("access token");
-    const update_db_discord = async () => {
-      if (!isConnected) return;
-      const res = await fetch(`/api/user/${address}`);
-      const userData = await res.json();
-      if (userData.discord_id !== "") return;
-      await fetch("/api/user/update", {
+  
+  const update_db_discord = async () => {
+    if (!isConnected || !session || discordData !== "") return;
+  
+    // User attempts to link Discord
+    try {
+      const response = await fetch("/api/user/update", {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           address: address,
           discord_id: session.user.name,
         }),
-        headers: {
-          Accept: "*/*",
-          "Content-Type": "application/json",
-        },
       });
-      setDiscordData(session.user.name);
-    };
-    if (session) update_db_discord();
-    else setDiscordData("");
-  }, [address, session]);
+  
+      if (response.ok) {
+        setDiscordData(session.user.name);
+      } else {
+        const data = await response.json();
+        // Handle error code 11000 from MongoDB for duplicate key
+        if (data.error && data.error.code === 11000) {
+          // Check if the error has already been shown in the current session
+          if (!sessionStorage.getItem("discordLinkErrorShown")) {
+            alert("This Discord is already linked to another address.");
+            sessionStorage.setItem("discordLinkErrorShown", "true"); // Prevent alert from showing again in the session
+          }
+        } else {
+          console.log("Failed to update Discord ID. Please try again.");
+        }
+      }
+    } catch (error) {
+      console.error("Error updating Discord ID:", error);
+    }
+  };
+  
+    
+    useEffect(() => {
+      if (session) update_db_discord();
+    }, [session, isConnected, address, discordData]);
 
   return (
     <Navbar
-      className=" bg-[#00070e1a] text-white font-Inter z-[99] py-5 "
+      className="bg-[#00070e1a] text-white font-Inter z-[99] py-5"
       position="sticky"
       maxWidth="xl"
       classNames={{
@@ -131,33 +149,24 @@ const Navbar_comp = () => {
         ],
       }}
     >
-       <NavbarBrand>
-  <a href="https://www.ultimatedigits.com/#home" target="_blank" rel="noopener noreferrer">
-    <img src="https://framerusercontent.com/images/6teXonF81p9KsihSjQY4Mwmup70.png?scale-down-to=512" alt="Ultimate Digits" className="h-[30px] md:h-[40px]" />
-  </a>
-</NavbarBrand>
-
+      <NavbarBrand>
+        <a href="https://www.ultimatedigits.com/#home" target="_blank" rel="noopener noreferrer">
+          <img src="https://framerusercontent.com/images/6teXonF81p9KsihSjQY4Mwmup70.png?scale-down-to=512" alt="Ultimate Digits" className="h-[30px] md:h-[40px]" />
+        </a>
+      </NavbarBrand>
+  
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         <NavbarItem isActive={router.pathname == "/"}>
-          <Link className="text-inherit" href="/">
-            Home
-          </Link>
+          <Link href="/">Home</Link>
         </NavbarItem>
         <NavbarItem isActive={router.pathname == "/leaderboard"}>
-          <Link
-            href="/leaderboard"
-            aria-current="page"
-            className="text-inherit"
-          >
-            Leaderboard
-          </Link>
+          <Link href="/leaderboard">Leaderboard</Link>
         </NavbarItem>
         <NavbarItem isActive={router.pathname == "/howto"}>
-          <Link aria-current="page" className="text-inherit" href="/howto">
-            How-To
-          </Link>
+          <Link href="/howto">How-To</Link>
         </NavbarItem>
       </NavbarContent>
+  
       <NavbarContent justify="end">
         <NavbarItem>
           <ConnectButton chainStatus="icon" showBalance={false} />
@@ -167,7 +176,7 @@ const Navbar_comp = () => {
             <div
               className="flex items-center justify-between space-x-2 ml-5 bg-inherit h-[45px] p-1 rounded-lg border border-black px-3 cursor-pointer"
               onClick={() => {
-                if (discordData == "") {
+                if (discordData === "") {
                   signIn("discord");
                 }
               }}
@@ -176,9 +185,10 @@ const Navbar_comp = () => {
                 src="https://www.cdnlogo.com/logos/d/15/discord.svg"
                 width={30}
                 height={30}
-                alt="token logo"
+                alt="Discord logo"
+                unoptimized={true} // Use unoptimized prop if you encounter issues with external image loading
               />
-              <p>{discordData == "" ? <>Link Discord</> : discordData}</p>
+              <p>{discordData === "" ? "Link Discord" : discordData}</p>
             </div>
           ) : (
             <></>
