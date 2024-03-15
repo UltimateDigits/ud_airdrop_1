@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import styles from '../../styles/HowTo.module.css';
 import Link from 'next/link'; 
+import Head from "next/head";
 
 const howto = () => {
     return (
       <div className={styles.container}>
+          <Head>
+  <title>Ultimate Airdrop - Farm $ULT</title>
+  <meta content="Airdrop site" name="description" />
+  <link href="https://framerusercontent.com/images/kqpEjtcCnXlCFGRaBKxXTkhc.svg" rel="shortcut icon" />
+</Head>
         <h1 className={styles.header}>Get Started with Ultimate Points Program</h1>
         <div className={styles.content}>
           Visit <a href="https://airdrop.ultimatedigits.com" className={styles.link}>airdrop.ultimatedigits.com</a> and connect any wallet to start farming <span className={styles.highlight}>$ULT</span> by completing the specified tasks. Additionally, link your Discord account and join the Ultimate Digits Community Server for Discord-related tasks. If you&apos;re already a server member, still connect your Discord to claim your Ultimate Points.
