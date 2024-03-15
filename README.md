@@ -23,7 +23,6 @@ Ultimate Digits Airdrop
   </p>
 </div>
 
-<!-- ABOUT THE PROJECT -->
 ## About The Project
 
 Ultimate Digits makes users’ existing mobile numbers their existing crypto wallets’ addresses.  For the privacy-conscious, we provide virtual Web3 mobile numbers as NFTs on Ethereum. These Web3 identifiers are ITU E164-compliant mobile numbers, starting with our unique +999 country code. Since most people are familiar with mobile numbers and use them in apps like WhatsApp, this system offers an intuitive Web2.5 bridge. 
