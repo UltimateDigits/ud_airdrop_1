@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 import styles from '../../styles/Home.module.css'; // Adjust the path according to your file structure
+import Head from "next/head";
 
 const columns = [
     {
@@ -63,6 +64,11 @@ const Leaderboard = () => {
 
     return (
         <div className={`${styles.main} no-border-box relative`}>
+            <Head>
+  <title>Ultimate Airdrop - Farm $ULT</title>
+  <meta content="Airdrop site" name="description" />
+  <link href="https://framerusercontent.com/images/kqpEjtcCnXlCFGRaBKxXTkhc.svg" rel="shortcut icon" />
+</Head>
             {showMessage && (
                 <div className="fixed top-0 left-0 right-0 bg-blue-500 text-white text-center py-2 z-[1050]">
                     Connect your wallet to see your ranking.
