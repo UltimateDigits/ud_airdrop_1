@@ -26,17 +26,8 @@ Ultimate Digits Airdrop
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+Ultimate Digits makes users’ existing mobile numbers their existing crypto wallets’ addresses.  For the privacy-conscious, we provide virtual Web3 mobile numbers as NFTs on Ethereum. These Web3 identifiers are ITU E164-compliant mobile numbers, starting with our unique +999 country code. Since most people are familiar with mobile numbers and use them in apps like WhatsApp, this system offers an intuitive Web2.5 bridge. 
 
-There are many great README templates available on GitHub; however, I didn't find one that really suited my needs so I created this enhanced one. I want to create a README template so amazing that it'll be the last one you ever need -- I think this is it.
-
-Here's why:
-* Your time should be focused on creating something amazing. A project that solves a problem and helps others
-* You shouldn't be doing the same tasks over and over like creating a README from scratch
-* You should implement DRY principles to the rest of your life :smile:
-
-Of course, no one template will serve all projects since your needs may be different. So I'll be adding more in the near future. You may also suggest changes by forking this repo and creating a pull request or opening an issue. Thanks to all the people have contributed to expanding this template!
-
-Use the `BLANK_README.md` to get started.
+Ultimate Digits is to ITU what ENS is to ICANN. We start as a Web2.5 app, evolving into a super-app with decentralized VOIP, text alerts for wallet transactions, and hash key-based micro-transactions. 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
