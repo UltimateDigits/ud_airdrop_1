@@ -30,7 +30,7 @@ const Card2 = () => {
           Refer and Earn extra Ultimate Points daily
         </h5>
         <p className="mb-5 mt-8 text-[16px] text-white sm:text-lg">
-          Could you invite others to join: Both you and the person you refer receive a 20% bonus on daily Ultimate Points earnings for each referral. Additionally, you&apos;ll earn 10% of the points your referred friend accumulates across all seasons.
+        Invite friends: Both you and the person you refer receive 1500 bonus Ultimate Points. These are credited soon as the person you refer joins our Discord.
         </p>
         {showReferralLink && isConnected ? (
           <Snippet variant="solid" color="primary" symbol="">
