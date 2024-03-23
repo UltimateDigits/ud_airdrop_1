@@ -20,13 +20,13 @@ const rows = [
     key: 3,
     Quest: "Mint the Ultimate Points Genesis NFT",
     Points: "100 Ultimate Points",
-    de1:"Free mint on BNB Smart Chain",
+    de1:"Free mint on Free mint on Base",
   },
   {
     key: 4,
     Quest: "HODL the Ultimate Points Genesis NFT",
     Points: "10 Ultimate Points",
-    de1:"Free mint on BNB Smart Chain",
+    de1:"Free mint on Free mint on Base",
     de2:"per day",
   },
 
