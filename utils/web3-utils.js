@@ -4,18 +4,18 @@ import {
     parseAbi
 } from "viem";
 import {
-    polygonMumbai
+    base
 } from "viem/chains";
 //TODO: @adielliot37 change to prod data
 const publicClient = createPublicClient({
-    chain: polygonMumbai,
+    chain: base,
     transport: http()
 })
 
 
 export const check_nft_ownership = async (address) => {
     const balance = await publicClient.readContract({
-        address: '0x412a0433893F58c0DC7e7B3E064280FE3e835386',
+        address: '0x4B9ac7420AEF7C2071e379fAB1F809d935ff495c',
         abi: parseAbi(['function balanceOf(address) view returns (uint256)']),
         functionName: 'balanceOf',
         args: [address],
