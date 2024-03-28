@@ -10,12 +10,13 @@ import Card2 from "../components/Card2";
 import Card3 from "../components/Card3";
 import TaskList from "../components/TaskList";
 import { Session } from "next-auth";
-import fav from "./favicon.ico"
+import fav from "./favicon.ico";
 import { StaticImageData } from "next/image";
-import ScreenSizeWarning from '../components/ScreenSizeWarning'
+import ScreenSizeWarning from "../components/ScreenSizeWarning";
 interface CustomSession extends Session {
   accessToken?: string; // Define the accessToken property
 }
+
 const Home = () => {
   const { isConnected, address } = useAccount();
   const [targetServer, setTargetServer] = useState(false);
@@ -23,7 +24,6 @@ const Home = () => {
   const { data: session } = useSession();
   const customSession = session as CustomSession;
   const TARGET_SERVER_ID = "635865020172861441";
-  
 
   if (session && !targetServer) {
     fetch("https://discord.com/api/v9/users/@me/guilds", {
@@ -63,14 +63,16 @@ const Home = () => {
   };
 
   return (
-    
     <div className={styles.container}>
       <ScreenSizeWarning />
       <Head>
-  <title>Ultimate Airdrop - Farm $ULT</title>
-  <meta content="Airdrop site" name="description" />
-  <link href="https://framerusercontent.com/images/kqpEjtcCnXlCFGRaBKxXTkhc.svg" rel="shortcut icon" />
-</Head>
+        <title>Ultimate Airdrop - Farm $ULT</title>
+        <meta content="Airdrop site" name="description" />
+        <link
+          href="https://framerusercontent.com/images/kqpEjtcCnXlCFGRaBKxXTkhc.svg"
+          rel="shortcut icon"
+        />
+      </Head>
       <main className={styles.main}>
         <Card3 />
         <Card1 />
