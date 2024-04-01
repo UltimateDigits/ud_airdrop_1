@@ -5,20 +5,7 @@ import { SessionProvider } from "next-auth/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider } from "wagmi";
 import Navbar_comp from "../components/Navbar_comp";
-// import { http, createConfig } from "@wagmi/core";
-// import { base, baseSepolia } from "@wagmi/core/chains";
-
-// export const config = createConfig({
-//   chains: [base, baseSepolia],
-//   transports: {
-//     [base.id]: http(
-//       "https://base-sepolia.g.alchemy.com/v2/CIE4zKPNF0FgcNapbXsMjxZiwfodi04_"
-//     ),
-//     [baseSepolia.id]: http(
-//       "https://base-mainnet.g.alchemy.com/v2/1lpy8WVnMciIEdxmUycg9j8gjs4j76tF"
-//     ),
-//   },
-// });
+import { http } from "viem";
 import {
   darkTheme,
   getDefaultConfig,
@@ -50,6 +37,11 @@ const config = getDefaultConfig({
       ? [baseSepolia]
       : []),
   ],
+  transports: {
+    [baseSepolia.id]: http(
+      "https://base-sepolia.g.alchemy.com/v2/CIE4zKPNF0FgcNapbXsMjxZiwfodi04_"
+    ),
+  },
   ssr: true,
 });
 

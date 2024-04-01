@@ -8,53 +8,10 @@ import {
   useWriteContract,
   useWatchPendingTransactions,
 } from "wagmi";
-
+import { writeContract } from "@wagmi/core";
+import { http, createConfig } from "wagmi";
+import { baseSepolia, base } from "viem/chains";
 Modal.setAppElement("#__next");
-// import { http, createConfig } from "@wagmi/core";
-// import { base, baseSepolia } from "@wagmi/core/chains";
-
-// export const config = createConfig({
-//   chains: [base, baseSepolia],
-//   transports: {
-//     [base.id]: http(
-//       "https://base-sepolia.g.alchemy.com/v2/CIE4zKPNF0FgcNapbXsMjxZiwfodi04_"
-//     ),
-//     [baseSepolia.id]: http(
-//       "https://base-mainnet.g.alchemy.com/v2/1lpy8WVnMciIEdxmUycg9j8gjs4j76tF"
-//     ),
-//   },
-// });
-import {
-  arbitrum,
-  base,
-  baseSepolia,
-  mainnet,
-  optimism,
-  polygon,
-  sepolia,
-  zora,
-} from "viem/chains";
-
-const config = getDefaultConfig({
-  appName: "UltimateDigits",
-  projectId: "ad3662e82ae03a6be909f4ba11b9e4aa",
-  chains: [
-    mainnet,
-    polygon,
-    optimism,
-    arbitrum,
-    base,
-    zora,
-    sepolia,
-    ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true"
-      ? [baseSepolia]
-      : []),
-  ],
-  ssr: true,
-});
-const account = getAccount(config);
-console.log("isConnected:", account.isConnected);
-console.log("connectedAddress:", account.address);
 
 const MintModal = ({ setStatus, closeModal }) => {
   const [modalIsOpen, setIsOpen] = useState(false);
@@ -65,8 +22,21 @@ const MintModal = ({ setStatus, closeModal }) => {
     setIsOpen(true);
   };
 
-  const { isConnected } = useAccount();
-  const { data: hash, writeContract } = useWriteContract();
+  const config = createConfig({
+    chains: [baseSepolia, base],
+    transports: {
+      [baseSepolia.id]: http(
+        "https://base-sepolia.g.alchemy.com/v2/CIE4zKPNF0FgcNapbXsMjxZiwfodi04_"
+      ),
+      [base.id]: http(
+        " https://base-mainnet.g.alchemy.com/v2/1lpy8WVnMciIEdxmUycg9j8gjs4j76tF"
+      ),
+    },
+  });
+
+  const { isConnected, error, isError } = useAccount();
+  const account = useAccount();
+  // const { data: hash, writeContract } = useWriteContract();
   const mintNFT = async () => {
     console.log("isConected:", isConnected);
     if (!isConnected) {
@@ -77,17 +47,23 @@ const MintModal = ({ setStatus, closeModal }) => {
     try {
       setMintingStatus("Minting NFT...");
       console.log("address:", account.address);
-      const mintTx = writeContract(config, {
+      console.log("account-config:", config);
+      const mintTx = await writeContract(config, {
         abi: udABI,
-        address: "0x0dFba0575190BA50c2d1FAe1110375D7a5c0DE2b",
+        address: process.env.UD_CONTRACT_ADDRESS,
         function: "mintNFT",
         args: [],
       });
-      debugger;
+      console.log("isConnected:", account.isConnected);
+      console.log("connectedAddress:", account.address);
       console.log("mintTx:", mintTx);
       console.log("txHash:", hash);
       setTransactionDetails(mintTx);
-      setMintingStatus("NFT minted successfully!");
+      console.log("error:", error);
+      console.log("isError:", isError);
+      if (mintTx) {
+        setMintingStatus("NFT minted successfully!");
+      }
 
       // Update the status in the parent component
       // updateStatusAfterMint();
@@ -96,14 +72,7 @@ const MintModal = ({ setStatus, closeModal }) => {
       console.error("Error minting NFT:", error);
     }
   };
-  // useWatchPendingTransactions({
-  //   onError(error) {
-  //     console.log("Error", error);
-  //   },
-  //   onTransactions(transactions) {
-  //     console.log("New transactions!", transactions);
-  //   },
-  // });
+
   const updateStatusAfterMint = () => {
     setStatus((oldVal) => ({ ...oldVal, 3: "Points Claimed" }));
     closeModal();
