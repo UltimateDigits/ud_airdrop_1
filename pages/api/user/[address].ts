@@ -11,6 +11,12 @@ interface ResponseFuncs {
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // const key_header = req.headers
   const {address} = req.query;
+
+  console.log("Addres",address)
+
+  console.log("req.headers['x-middleware-auth']",req.headers['x-middleware-auth'])
+  console.log("env",  process.env.KEY )
+  
   if(!(req.headers['x-middleware-auth'] === process.env.KEY)){
     res.status(401).json({error: "Unauthorized call"})
   }

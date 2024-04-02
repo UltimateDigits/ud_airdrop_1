@@ -178,10 +178,10 @@ const submitEmail = async () => {
     
     switch (key) {
       case 1:
-    // if (!session) {
-    //   signIn("discord");
-    //   return; // Ensure to return after calling signIn to prevent further execution until the session is established
-    // }
+    if (!session) {
+      signIn("discord");
+      return; // Ensure to return after calling signIn to prevent further execution until the session is established
+    }
     
     setStatus((oldVal) => ({ ...oldVal, 1: "checking..." }));
     
