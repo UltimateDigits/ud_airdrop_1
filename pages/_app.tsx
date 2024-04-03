@@ -4,44 +4,38 @@ import type { AppProps } from "next/app";
 import { SessionProvider } from "next-auth/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider } from "wagmi";
-import Navbar_comp from "../components/Navbar_comp";
-import { http } from "viem";
+import {
+  arbitrum,
+  base,
+  baseSepolia,
+  mainnet,
+  optimism,
+  polygon,
+  sepolia,
+  zora,
+} from "wagmi/chains";
 import {
   darkTheme,
   getDefaultConfig,
   midnightTheme,
   RainbowKitProvider,
 } from "@rainbow-me/rainbowkit";
-import {
-  arbitrum,
-  base,
-  mainnet,
-  optimism,
-  polygon,
-  sepolia,
-  zora,
-  baseSepolia,
-} from "wagmi/chains";
+import Navbar_comp from "../components/Navbar_comp";
 const config = getDefaultConfig({
-  appName: "UltimateDigits",
-  projectId: "ad3662e82ae03a6be909f4ba11b9e4aa",
+  appName: "Airdrop Hunters",
+  projectId: "db1b8a46ffa835bd9a48a89ff540f990",
   chains: [
     mainnet,
+    sepolia,
     polygon,
     optimism,
     arbitrum,
     base,
     zora,
-    sepolia,
     ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true"
       ? [baseSepolia]
       : []),
   ],
-  transports: {
-    [baseSepolia.id]: http(
-      "https://base-sepolia.g.alchemy.com/v2/CIE4zKPNF0FgcNapbXsMjxZiwfodi04_"
-    ),
-  },
   ssr: true,
 });
 

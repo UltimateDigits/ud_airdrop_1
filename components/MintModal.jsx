@@ -1,16 +1,12 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
-import udABI from "../abi";
-import { getDefaultConfig } from "@rainbow-me/rainbowkit";
-import { getAccount } from "@wagmi/core";
+import udAbi from "../abi.json";
 import {
   useAccount,
   useWriteContract,
   useWatchPendingTransactions,
 } from "wagmi";
-import { writeContract } from "@wagmi/core";
-import { http, createConfig } from "wagmi";
-import { baseSepolia, base } from "viem/chains";
+
 Modal.setAppElement("#__next");
 
 const MintModal = ({ setStatus, closeModal }) => {
@@ -22,24 +18,18 @@ const MintModal = ({ setStatus, closeModal }) => {
     setIsOpen(true);
   };
 
-  const config = createConfig({
-    chains: [baseSepolia, base],
-    transports: {
-      [baseSepolia.id]: http(
-        "https://base-sepolia.g.alchemy.com/v2/CIE4zKPNF0FgcNapbXsMjxZiwfodi04_"
-      ),
-      [base.id]: http(
-        " https://base-mainnet.g.alchemy.com/v2/1lpy8WVnMciIEdxmUycg9j8gjs4j76tF"
-      ),
-    },
-  });
-
-  const { isConnected, error, isError } = useAccount();
   const account = useAccount();
-  // const { data: hash, writeContract } = useWriteContract();
+  const {
+    data: hash,
+    writeContract,
+    isError,
+    error,
+    status,
+  } = useWriteContract();
+
   const mintNFT = async () => {
-    console.log("isConected:", isConnected);
-    if (!isConnected) {
+    console.log("isConnected:", account.isConnected);
+    if (!account.isConnected) {
       setMintingStatus("Please connect your wallet to mint the NFT.");
       return;
     }
@@ -47,22 +37,21 @@ const MintModal = ({ setStatus, closeModal }) => {
     try {
       setMintingStatus("Minting NFT...");
       console.log("address:", account.address);
-      console.log("account-config:", config);
-      const mintTx = await writeContract(config, {
-        abi: udABI,
-        address: process.env.UD_CONTRACT_ADDRESS,
+
+      writeContract({
+        abi: udAbi,
+        address: "0x0dFba0575190BA50c2d1FAe1110375D7a5c0DE2b",
         function: "mintNFT",
-        args: [],
       });
-      console.log("isConnected:", account.isConnected);
-      console.log("connectedAddress:", account.address);
-      console.log("mintTx:", mintTx);
-      console.log("txHash:", hash);
-      setTransactionDetails(mintTx);
-      console.log("error:", error);
-      console.log("isError:", isError);
-      if (mintTx) {
+
+      console.log("status", status);
+
+      if (!isError) {
+        console.log("Data:", hash);
         setMintingStatus("NFT minted successfully!");
+      } else {
+        setMintingStatus("Error minting NFT. Please try again.");
+        console.error("Error minting NFT:", error);
       }
 
       // Update the status in the parent component
@@ -127,7 +116,7 @@ const MintModal = ({ setStatus, closeModal }) => {
         <div className="flex justify-end">
           <button
             className="px-4 py-2 bg-blue-500 text-white font-bold rounded-md hover:bg-blue-700 transition-colors duration-300 mr-2"
-            onClick={mintNFT}
+            onClick={() => mintNFT()}
           >
             Mint NFT
           </button>
