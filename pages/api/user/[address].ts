@@ -10,16 +10,23 @@ interface ResponseFuncs {
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // const key_header = req.headers
-  const { address } = req.query;
-  if (!(req.headers["x-middleware-auth"] === process.env.KEY)) {
-    res.status(401).json({ error: "Unauthorized call" });
+
+  const {address} = req.query;
+
+  console.log("Addres",address)
+
+  console.log("req.headers['x-middleware-auth']",req.headers['x-middleware-auth'])
+  console.log("env",  process.env.KEY )
+  
+  if(!(req.headers['x-middleware-auth'] === process.env.KEY)){
+    res.status(401).json({error: "Unauthorized call"})
   }
   //capture request method, we type it as a key of ResponseFunc to reduce typing later
   const method: keyof ResponseFuncs = req.method as keyof ResponseFuncs;
-  console.log("hiii");
+
   //function for catch errors
   const catcher = (error: Error) => res.status(400).json({ error });
-  console.log("hloo");
+
 
   // Potential Responses
   const handleCase: ResponseFuncs = {

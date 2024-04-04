@@ -4,14 +4,14 @@ import {
     parseAbi
 } from "viem";
 import {
-    baseSepolia
+
+    baseSepolia,base
 } from "viem/chains";
 //TODO: @adielliot37 change to prod data
 const publicClient = createPublicClient({
     chain: baseSepolia,
     transport: http("https://base-sepolia.g.alchemy.com/v2/CIE4zKPNF0FgcNapbXsMjxZiwfodi04_")
 })
-
 
 export const check_nft_ownership = async (address) => {
     const balance = await publicClient.readContract({

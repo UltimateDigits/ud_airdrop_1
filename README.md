@@ -3,9 +3,9 @@ Ultimate Digits Airdrop
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://framerusercontent.com/images/6teXonF81p9KsihSjQY4Mwmup70.png?scale-down-to=512">
+ <!--  <a href="https://framerusercontent.com/images/6teXonF81p9KsihSjQY4Mwmup70.png?scale-down-to=512">
     <img src="https://framerusercontent.com/images/6teXonF81p9KsihSjQY4Mwmup70.png?scale-down-to=512" alt="Logo" width="80" height="80">
-  </a>
+  </a> -->
 
   <h3 align="center">Ultimate Digits Airdrop</h3>
 
@@ -16,10 +16,6 @@ Ultimate Digits Airdrop
     <br />
     <br />
     <a href="http://airdrop.ultimatedigits.com/">View Demo</a>
-    <!-- · -->
-    <!-- <a href="https://github.com/othneildrew/Best-README-Template/issues">Report Bug</a> -->
-    <!-- · -->
-    <!-- <a href="https://github.com/othneildrew/Best-README-Template/issues">Request Feature</a> -->
   </p>
 </div>
 

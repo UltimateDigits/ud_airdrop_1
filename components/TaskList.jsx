@@ -22,14 +22,15 @@ const rows = [
     key: 3,
     Quest: "Mint the Ultimate Points Genesis NFT",
     Points: "100 Ultimate Points",
-    de1: "Free mint on BNB Smart Chain",
+    de1:"Free mint on Base",
   },
   {
     key: 4,
     Quest: "HODL the Ultimate Points Genesis NFT",
     Points: "10 Ultimate Points",
-    de1: "Free mint on BNB Smart Chain",
-    de2: "per day",
+
+    de1:"Free mint on Base",
+    de2:"per day",
   },
 
   {
@@ -188,10 +189,11 @@ const TaskList = () => {
 
     switch (key) {
       case 1:
-        // if (!session) {
-        //   signIn("discord");
-        //   return; // Ensure to return after calling signIn to prevent further execution until the session is established
-        // }
+
+        if (!session) {
+          signIn("discord");
+          return; // Ensure to return after calling signIn to prevent further execution until the session is established
+        }
 
         setStatus((oldVal) => ({ ...oldVal, 1: "checking..." }));
 
