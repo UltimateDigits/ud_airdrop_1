@@ -21,14 +21,28 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // Potential Responses
   const handleCase: ResponseFuncs = {
     // RESPONSE FOR GET REQUESTS
+    // RESPONSE FOR POST REQUESTS
     POST: async (req: NextApiRequest, res: NextApiResponse) => {
       const { User } = await connect();
       const { address } = req.body;
       delete req.body["address"];
-      const { _id } = await User.findOne({ address: address });
-      res.json(
-        await User.findByIdAndUpdate({ _id: _id }, req.body).catch(catcher)
-      );
+
+      const existingUser = await User.findOne({ address: address });
+
+      if (!existingUser) {
+        // If the user doesn't exist, create a new document
+        const newUser = new User({ address, ...req.body });
+        const savedUser = await newUser.save().catch(catcher);
+        res.json(savedUser);
+      } else {
+        // If the user exists, update the existing document
+        const updatedUser = await User.findOneAndUpdate(
+          { address: address },
+          req.body,
+          { new: true }
+        ).catch(catcher);
+        res.json(updatedUser);
+      }
     },
   };
 

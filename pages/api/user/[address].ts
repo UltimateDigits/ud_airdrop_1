@@ -10,6 +10,7 @@ interface ResponseFuncs {
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // const key_header = req.headers
+
   const {address} = req.query;
 
   console.log("Addres",address)
@@ -26,12 +27,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   //function for catch errors
   const catcher = (error: Error) => res.status(400).json({ error });
 
+
   // Potential Responses
   const handleCase: ResponseFuncs = {
     // RESPONSE FOR GET REQUESTS
     GET: async (req: NextApiRequest, res: NextApiResponse) => {
       const { User } = await connect(); // connect to database
-      res.json(await User.findOne({address: address}).catch(catcher));
+      res.json(await User.findOne({ address: address }).catch(catcher));
     },
   };
 
