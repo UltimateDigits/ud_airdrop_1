@@ -123,9 +123,9 @@ const TaskList = () => {
   useEffect(() => {
     const get_data = async () => {
       const res = await fetch(`/api/user/${address}`);
-      console.log("response:", res);
+     // console.log("response:", res);
       const data = await res.json();
-      console.log("user-data:", data);
+     // console.log("user-data:", data);
       if (data == null) return;
 
       setUserData(data);
@@ -138,12 +138,12 @@ const TaskList = () => {
     }
   }, [address, status]);
 
-  const validateEmail = (email) => email.includes("@gmail.com");
+  const validateEmail = (email) => email.includes("@");
 
   // This is a conceptual and NOT recommended approach
   const submitEmail = async () => {
     if (!validateEmail(email)) {
-      alert("Please enter a valid Gmail address.");
+      alert("Please enter a valid email address.");
       return;
     }
 
@@ -381,10 +381,9 @@ const TaskList = () => {
       {/* <MintModal setStatus={setStatus} /> */}
       {showEmailPopup && (
         <div
-          className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full"
-          id="email-modal"
+          className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center" // Adjusted for centering
         >
-          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+          <div className="relative mx-auto p-5 border shadow-lg rounded-md bg-white">
             <div className="mt-3 text-center">
               <h3 className="text-lg leading-6 font-medium text-gray-900">
                 Subscribe to Newsletter
@@ -401,7 +400,7 @@ const TaskList = () => {
               <div className="items-center px-4 py-3">
                 <button
                   id="submit-btn"
-                  className="px-4 py-2 bg-green-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-300"
+                  className="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300" // Changed background color
                   onClick={submitEmail}
                 >
                   Subscribe
