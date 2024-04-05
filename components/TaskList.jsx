@@ -9,7 +9,8 @@ const rows = [
     key: 1,
     Quest: "Join Our Discord",
     Points: "100 Ultimate Points",
-    de1: "Join and get verified on Discord",
+    de1: "Join and get verified on Discord.",
+    link: "https://discord.gg/amewkxzs7J",
   },
   {
     key: 2,
@@ -17,6 +18,7 @@ const rows = [
     Points: "10 Ultimate Points",
     de1: "Type /gm and paste your wallet address",
     de2: "per day",
+    actionLink: "https://discord.com/channels/1083617900759371776/1088848310854496337",
   },
   {
     key: 3,
@@ -40,6 +42,14 @@ const rows = [
     de1: "Takes under 1 minute",
   },
 ];
+
+function renderDescription(description, link) {
+  return (
+    <>
+      {description} {link && <span><strong><a href={link} target="_blank" rel="noopener noreferrer" className="text-white hover:underline">Join here</a></strong></span>}
+    </>
+  );
+}
 
 const columns = [
   {
@@ -184,7 +194,7 @@ const TaskList = () => {
     }
   };
 
-  const claimPoints = async (key) => {
+  const claimPoints = async (key, actionLink = "") => {
     if (!userData) return;
 
     switch (key) {
@@ -233,6 +243,15 @@ const TaskList = () => {
           return;
         }
         break;
+
+
+        
+      case 2:
+        if (actionLink) {
+          window.open(actionLink, '_blank');
+          return;
+        }
+        break;  
 
       case 3:
         if (userData.nft_minted_claim) {
@@ -348,22 +367,24 @@ const TaskList = () => {
               <tr className="bg-none text-white text-[18px]" key={row.key}>
                 <td className="px-8 py-4">
                   {row.Quest}
-                  <div className="text-white text-[12px] ">{row.de1}</div>
-                </td>
-                <td className="px-8 py-4">
-                  {row.Points}
-                  <div className="px-1 text-white text-[12px] ">{row.de2}</div>
-                </td>
-                <td className="px-8 py-4">
-                  {isConnected ? (
-                    <button
-                      className="px-4 py-2 bg-blue-500 text-white font-bold rounded-full hover:bg-blue-700 transition duration-300"
-                      onClick={() => claimPoints(row.key)}
-                    >
-                      {status[row.key]}
-                    </button>
-                  ) : (
-                    "*****"
+                  <div className="text-white text-[12px]">
+                  {renderDescription(row.de1, row.link)}
+                </div>
+              </td>
+              <td className="px-8 py-4">
+                {row.Points}
+                <div className="px-1 text-white text-[12px]">{row.de2}</div>
+              </td>
+              <td className="px-8 py-4">
+                {isConnected ? (
+                  <button
+                    className="px-4 py-2 bg-blue-500 text-white font-bold rounded-full hover:bg-blue-700 transition duration-300"
+                    onClick={() => claimPoints(row.key, row.actionLink)}
+                  >
+                    {status[row.key]}
+                  </button>
+                ) : (
+                  "*****"
                   )}
                 </td>
               </tr>
