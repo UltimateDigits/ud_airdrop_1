@@ -36,9 +36,9 @@ export const check_nft_ownership = async (address) => {
 export const check_nft_ownership1 = async (address) => {
     const balance = await publicClient1.readContract({
       address: '0xF9e631014Ce1759d9B76Ce074D496c3da633BA12',
-      abi: parseAbi(['function balanceOf(address,uint256) view returns (uint256)']),
+      abi: parseAbi(['function balanceOf(address) view returns (uint256)']),
       functionName: 'balanceOf',
-      args: [address, 0],
+      args: [address],
     });
   
     return Number(balance); 
