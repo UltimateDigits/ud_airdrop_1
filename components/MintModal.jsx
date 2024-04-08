@@ -3,132 +3,122 @@ import Modal from "react-modal";
 import udAbi from "../abi.json";
 import {
   useAccount,
+  useBalance,
+  useChainId,
+  useSwitchChain,
   useWriteContract,
-  useWatchPendingTransactions,
 } from "wagmi";
 
 Modal.setAppElement("#__next");
 
 const MintModal = ({ setStatus, closeModal }) => {
-  const [modalIsOpen, setIsOpen] = useState(false);
   const [mintingStatus, setMintingStatus] = useState("");
   const [transactionDetails, setTransactionDetails] = useState(null);
+  const [isSwitchingNetwork, setIsSwitchingNetwork] = useState(false);
+  const [isMinting, setIsMinting] = useState(false); // New state to track minting status
 
-  const openModal = () => {
-    setIsOpen(true);
-  };
-
-  const account = useAccount();
-  const {
-    data: hash,
-    writeContract,
-    isError,
-    error,
-    status,
-  } = useWriteContract();
+  const { isConnected } = useAccount();
+  const chainId = useChainId();
+  const { switchChain } = useSwitchChain();
+  const { writeContract } = useWriteContract();
 
   const mintNFT = async () => {
-    console.log("isConnected:", account.isConnected);
-    if (!account.isConnected) {
+    if (!isConnected) {
       setMintingStatus("Please connect your wallet to mint the NFT.");
       return;
     }
 
-    try {
-      setMintingStatus("Minting NFT...");
-      console.log("address:", account.address);
+    // Disables the Mint button by setting isMinting to true
+    setIsMinting(true);
 
-      writeContract({
-        abi: udAbi,
-        address: "0x0dFba0575190BA50c2d1FAe1110375D7a5c0DE2b",
-        function: "mintNFT",
-      });
-
-      console.log("status", status);
-
-      if (!isError) {
-        console.log("Data:", hash);
-        setMintingStatus("NFT minted successfully!");
-      } else {
-        setMintingStatus("Error minting NFT. Please try again.");
-        console.error("Error minting NFT:", error);
+    if (chainId?.id !== 8453) {
+      setIsSwitchingNetwork(true);
+      try {
+        await switchChain({ chainId: 8453 });
+        setIsSwitchingNetwork(false);
+      } catch (error) {
+        setIsSwitchingNetwork(false);
+        setIsMinting(false); // Re-enable the Mint button if switching fails
+        console.log("Switch Network Error:", error);
+        setMintingStatus("Error switching to Base Sepolia. Please change network manually in MetaMask.");
+        return;
       }
-
-      // Update the status in the parent component
-      // updateStatusAfterMint();
-    } catch (error) {
-      setMintingStatus("Error minting NFT. Please try again.");
-      console.error("Error minting NFT:", error);
     }
-  };
 
-  const updateStatusAfterMint = () => {
-    setStatus((oldVal) => ({ ...oldVal, 3: "Points Claimed" }));
-    closeModal();
+    setMintingStatus("Minting NFT...");
+
+   
+       await writeContract({
+        address: "0x4B9ac7420AEF7C2071e379fAB1F809d935ff495c",
+        abi: udAbi,
+        functionName: "mintNFT",
+        args: [],
+      });
+   
+//    setIsMinting(false); // Re-enable the Mint button after the process is complete or fails
   };
 
   return (
     <Modal
-      isOpen={true}
-      onRequestClose={closeModal}
-      contentLabel="Mint NFT Modal"
-      className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto"
-      overlayClassName="fixed inset-0 bg-black bg-opacity-50"
-    >
-      <div className="relative bg-white rounded-lg shadow-xl p-8 max-w-xl mx-auto transition-all duration-500 transform scale-100">
-        <div className="flex justify-between items-start">
-          <h2 className="text-2xl font-bold mb-4">
-            Mint Ultimate Points Genesis NFT
-          </h2>
-          <button
-            className="text-gray-500 hover:text-gray-700 transition-colors duration-300"
-            onClick={closeModal}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
+    isOpen={true}
+    onRequestClose={closeModal}
+    contentLabel="Mint NFT Modal"
+    className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto"
+    overlayClassName="fixed inset-0 bg-black bg-opacity-50"
+  >
+    <div className="relative bg-white rounded-lg shadow-xl p-8 max-w-3xl mx-auto"> {/* Adjusted max-w-xl to max-w-3xl for additional space */}
+      <div className="flex justify-between items-start">
+        <h2 className="text-2xl font-bold mb-4">Mint the Ultimate Points Genesis NFT</h2>
+        <button
+          className="text-gray-400 hover:text-gray-600"
+          onClick={closeModal}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <p>
+        You're one step closer! Mint the free Ultimate Points Genesis NFT to farm both $ULT and Base. This NFT on Base is your passport to our game-changing airdrop and earns you passive Ultimate Points for every day you hold it.
+      </p>
+      <div className="flex justify-between items-start mt-4 gap-8"> {/* Added flex layout here */}
+        <div> {/* Left side content */}
+          <p><strong>NFT Contract Address:</strong> 0x4B9ac7420AEF7C2071e379fAB1F809d935ff495c</p>
+          <p><strong>Creator:</strong> Ultimate Digits</p>
+          <p><strong>Chain:</strong> Base</p>
+          <p><strong>Creator Royalty:</strong> 10%</p>
         </div>
-        <p className="mb-6">
-          This is a special NFT that grants you access to exclusive features and
-          rewards in our platform.
-        </p>
-        {mintingStatus && <p className="text-blue-500 mb-4">{mintingStatus}</p>}
-        {transactionDetails && (
-          <div className="bg-gray-100 p-4 rounded-md mb-6">
-            <h3 className="text-lg font-bold mb-2">Transaction Details</h3>
-            <p>TokenId: {transactionDetails.tokenId}</p>
-            <p>Chain: {transactionDetails.chain}</p>
-            <p>Minted to: {transactionDetails.mintedToAddress}</p>
-          </div>
-        )}
-        <div className="flex justify-end">
-          <button
-            className="px-4 py-2 bg-blue-500 text-white font-bold rounded-md hover:bg-blue-700 transition-colors duration-300 mr-2"
-            onClick={() => mintNFT()}
-          >
-            Mint NFT
-          </button>
-          <button
-            className="px-4 py-2 bg-gray-300 text-gray-700 font-bold rounded-md hover:bg-gray-400 transition-colors duration-300"
-            onClick={closeModal}
-          >
-            Close
-          </button>
+        <div> 
+          <img src="https://cloudflare-ipfs.com/ipfs/bafybeicjft73uwwzdpqkjn2bu4raggbjpqosqdv3cduebpxrd5clycmzxi/NFT2.png" alt="UD genesis" style={{ maxWidth: '200px', maxHeight: '140px' }} />
         </div>
       </div>
-    </Modal>
+      {mintingStatus && <p className="text-blue-500 mb-4">{mintingStatus}</p>}
+      {transactionDetails && (
+        <div className="bg-gray-100 p-4 rounded-md mb-6">
+          <h3 className="text-lg font-bold mb-2">Transaction Details</h3>
+          <p>TokenId: {transactionDetails.tokenId}</p>
+          <p>Chain: {transactionDetails.chainId}</p>
+          <p>Minted to: {transactionDetails.mintedToAddress}</p>
+        </div>
+      )}
+      <div className="flex justify-end mt-4">
+        <button
+          className={`px-4 py-2 font-bold rounded-md ${isMinting || isSwitchingNetwork ? "bg-gray-500 text-gray-400" : "bg-blue-500 text-white hover:bg-blue-700"} transition-colors duration-300 mr-2`}
+          onClick={mintNFT}
+          disabled={isMinting || isSwitchingNetwork}
+        >
+          {isMinting ? "Minting..." : isSwitchingNetwork ? "Switching Network..." : "Mint NFT"}
+        </button>
+        {/* <button
+          className="px-4 py-2 bg-gray-300 text-gray-700 font-bold rounded-md hover:bg-gray-400 transition-colors duration-300"
+          onClick={closeModal}
+        >
+          Close
+        </button> */}
+      </div>
+    </div>
+  </Modal>
+  
   );
 };
 

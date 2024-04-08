@@ -32,6 +32,8 @@ export const connect = async () => {
     totalDailyNFTcount: { type: Number, default: 0 },
     emailAdded: { type: Boolean, default: false },
     email: { type: String, default: "" },
+    ZoNFTclaimed: { type: Boolean, default: false },
+    ZoBalance: { type: Number, default: 0 },
   });
 
   const User = mongoose.models.Users || mongoose.model("Users", userSchema);

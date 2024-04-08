@@ -32,6 +32,7 @@ const config = getDefaultConfig({
     arbitrum,
     base,
     zora,
+    baseSepolia,
     ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true"
       ? [baseSepolia]
       : []),

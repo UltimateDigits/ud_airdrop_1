@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { check_nft_ownership } from "../utils/web3-utils";
+import { check_nft_ownership1 } from "../utils/web3-utils";
 import MintModal from "./MintModal";
 
 const rows = [
@@ -41,6 +42,15 @@ const rows = [
     Points: "250 Ultimate Points",
     de1: "Takes under 1 minute",
   },
+
+  {
+    key: 6,
+    Quest: "Hold Founders of ZoWorld NFTs",
+    Points: "200 Ultimate Points",
+    de1: "Earn 200 Points/NFT by connecting your ZoWorld wallet. Dive in!",
+    de2: "per NFT",
+  },
+  
 ];
 
 function renderDescription(description, link) {
@@ -127,6 +137,7 @@ const TaskList = () => {
     3: "Claim Points",
     4: "Claim Points",
     5: "Subscribe",
+    6: "Claim Points",
   });
   const [showMintModal, setShowMintModal] = useState(false);
 
@@ -256,7 +267,7 @@ const TaskList = () => {
       case 3:
         if (userData.nft_minted_claim) {
           setStatus((oldVal) => ({ ...oldVal, 3: "Already Claimed" }));
-          console.log("magane...");
+          console.log("Already Minted");
 
           return;
         } else if (await check_nft_ownership(address)) {
@@ -272,12 +283,12 @@ const TaskList = () => {
               "Content-Type": "application/json",
             },
           });
-          console.log("magane madangi ...");
+          console.log("Already minted adding points");
 
           setStatus((oldVal) => ({ ...oldVal, 3: "Points Claimed" }));
           return;
         } else {
-          console.log("magane madangi veru...");
+          console.log("Minting NFT");
           setShowMintModal(true); // Open the mint modal
           return;
         }
@@ -341,6 +352,48 @@ const TaskList = () => {
             setShowEmailPopup(true);
           }
         }
+        break;
+
+      case 6:
+        // Inside your existing claimPoints function, for case 6
+        const ZoBal = userData.ZoBalance ;
+        if (userData.ZoNFTclaimed) {
+          setStatus((oldVal) => ({
+            ...oldVal,
+            6: `Claimed Points (${ZoBal} NFTs)`,
+          }));
+          return;
+        }
+
+        const zoNFTBalance = await check_nft_ownership1(address);
+        if (zoNFTBalance === 0) {
+          setStatus((oldVal) => ({ ...oldVal, 6: "You don't hold ZoWorldNFT" }));
+          return;
+        } else {
+          // Calculate points based on the actual balance
+          const pointsToAdd = 200 * zoNFTBalance;
+          await fetch("/api/user/update", {
+            method: "POST",
+            body: JSON.stringify({
+              address: address,
+              ZoNFTclaimed: true,
+              totalPts: userData.totalPts + pointsToAdd,
+              ZoBalance: zoNFTBalance,
+
+            }),
+            headers: {
+              Accept: "*/*",
+              "Content-Type": "application/json",
+            },
+          });
+          
+          setStatus((oldVal) => ({
+            ...oldVal,
+            6: `Claimed Points (${ZoBal} NFTs)`,
+          }));
+          return;
+        }
+
         break;
     }
   };

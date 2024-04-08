@@ -169,7 +169,7 @@ const Navbar_comp = () => {
   
       <NavbarContent justify="end">
         <NavbarItem>
-          <ConnectButton chainStatus="icon" showBalance={false} />
+          <ConnectButton chainStatus="icon" showBalance={false} showRecentTransactions={true}/>
         </NavbarItem>
         <NavbarItem>
           {isConnected ? (
