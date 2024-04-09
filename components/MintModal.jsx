@@ -43,7 +43,7 @@ const MintModal = ({ setStatus, closeModal }) => {
         console.log("Switch Network Error:", error);
         setMintingStatus(
           <>
-            Minting NFT. Please wait and don't press any button. This popup will close automatically. You can see the NFT on <a href="https://basescan.org/address/0x4b9ac7420aef7c2071e379fab1f809d935ff495c" target="_blank" rel="noopener noreferrer">Base Scan</a>.
+            Minting NFT. Please wait and dont press any button. This popup will close automatically. You can see the NFT on <a href="https://basescan.org/address/0x4b9ac7420aef7c2071e379fab1f809d935ff495c" target="_blank" rel="noopener noreferrer">Base Scan</a>.
           </>
         );
         
@@ -51,7 +51,7 @@ const MintModal = ({ setStatus, closeModal }) => {
       }
     }
 
-    setMintingStatus("Minting NFT. Please wait and don't press any button. This popup will close automatically. You can see the NFT on Base Scan.");
+    setMintingStatus("Minting NFT. Please wait and dont press any button. This popup will close automatically. You can see the NFT on Base Scan.");
 
    
     try {
