@@ -12,7 +12,8 @@ import {
 Modal.setAppElement("#__next");
 
 const MintModal = ({ setStatus, closeModal }) => {
-  const [mintingStatus, setMintingStatus] = useState("");
+  const [mintingStatus, setMintingStatus] = useState(null); 
+
   const [transactionDetails, setTransactionDetails] = useState(null);
   const [isSwitchingNetwork, setIsSwitchingNetwork] = useState(false);
   const [isMinting, setIsMinting] = useState(false); // New state to track minting status
@@ -40,20 +41,32 @@ const MintModal = ({ setStatus, closeModal }) => {
         setIsSwitchingNetwork(false);
         setIsMinting(false); // Re-enable the Mint button if switching fails
         console.log("Switch Network Error:", error);
-        setMintingStatus("Error switching to Base Sepolia. Please change network manually in MetaMask.");
+        setMintingStatus(
+          <>
+            Minting NFT. Please wait and don't press any button. This popup will close automatically. You can see the NFT on <a href="https://basescan.org/address/0x4b9ac7420aef7c2071e379fab1f809d935ff495c" target="_blank" rel="noopener noreferrer">Base Scan</a>.
+          </>
+        );
+        
         return;
       }
     }
 
-    setMintingStatus("Minting NFT...");
+    setMintingStatus("Minting NFT. Please wait and don't press any button. This popup will close automatically. You can see the NFT on Base Scan.");
 
    
-       await writeContract({
+    try {
+      await writeContract({
         address: "0x4B9ac7420AEF7C2071e379fAB1F809d935ff495c",
         abi: udAbi,
         functionName: "mintNFT",
         args: [],
       });
+      setTimeout(closeModal, 15000); // Automatically close the modal after 15 seconds
+    } catch (error) {
+      console.error("Minting Error:", error);
+      setIsMinting(false); // In case of error, ensure the user can try minting again
+      setMintingStatus("Minting failed. Please try again.");
+    }
    
 //    setIsMinting(false); // Re-enable the Mint button after the process is complete or fails
   };
@@ -93,6 +106,7 @@ const MintModal = ({ setStatus, closeModal }) => {
         </div>
       </div>
       {mintingStatus && <p className="text-blue-500 mb-4">{mintingStatus}</p>}
+
       {transactionDetails && (
         <div className="bg-gray-100 p-4 rounded-md mb-6">
           <h3 className="text-lg font-bold mb-2">Transaction Details</h3>
