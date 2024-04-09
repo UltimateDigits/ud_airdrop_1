@@ -79,7 +79,7 @@ const MintModal = ({ setStatus, closeModal }) => {
         </button>
       </div>
       <p>
-        You're one step closer! Mint the free Ultimate Points Genesis NFT to farm both $ULT and Base. This NFT on Base is your passport to our game-changing airdrop and earns you passive Ultimate Points for every day you hold it.
+        You&apos;re one step closer! Mint the free Ultimate Points Genesis NFT to farm both $ULT and Base. This NFT on Base is your passport to our game-changing airdrop and earns you passive Ultimate Points for every day you hold it.
       </p>
       <div className="flex justify-between items-start mt-4 gap-8"> {/* Added flex layout here */}
         <div> {/* Left side content */}
