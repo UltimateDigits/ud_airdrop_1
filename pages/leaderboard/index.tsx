@@ -60,7 +60,7 @@ const Leaderboard = () => {
 
 
     let topData = data.slice(0, 50);
-    if (isConnected && connectedUserData && userRanking > 50) {
+    if (isConnected && connectedUserData && userRanking !== null && !topData.find(user => user.address === connectedAddress)) {
         topData = [connectedUserData, ...topData.slice(0, 49)]; 
     }
 
