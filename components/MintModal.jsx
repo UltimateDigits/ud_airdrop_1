@@ -68,7 +68,7 @@ const MintModal = ({ setStatus, closeModal }) => {
       setMintingStatus("Minting failed. Please try again.");
     }
    
-//    setIsMinting(false); // Re-enable the Mint button after the process is complete or fails
+
   };
 
   return (
@@ -79,7 +79,7 @@ const MintModal = ({ setStatus, closeModal }) => {
     className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto"
     overlayClassName="fixed inset-0 bg-black bg-opacity-50"
   >
-    <div className="relative bg-white rounded-lg shadow-xl p-8 max-w-3xl mx-auto"> {/* Adjusted max-w-xl to max-w-3xl for additional space */}
+    <div className="relative bg-white rounded-lg shadow-xl p-8 max-w-3xl mx-auto">
       <div className="flex justify-between items-start">
         <h2 className="text-2xl font-bold mb-4">Mint the Ultimate Points Genesis NFT</h2>
         <button
@@ -94,8 +94,8 @@ const MintModal = ({ setStatus, closeModal }) => {
       <p>
         You&apos;re one step closer! Mint the free Ultimate Points Genesis NFT to farm both $ULT and Base. This NFT on Base is your passport to our game-changing airdrop and earns you passive Ultimate Points for every day you hold it.
       </p>
-      <div className="flex justify-between items-start mt-4 gap-8"> {/* Added flex layout here */}
-        <div> {/* Left side content */}
+      <div className="flex justify-between items-start mt-4 gap-8"> 
+        <div>
           <p><strong>NFT Contract Address:</strong> 0x4B9ac7420AEF7C2071e379fAB1F809d935ff495c</p>
           <p><strong>Creator:</strong> Ultimate Digits</p>
           <p><strong>Chain:</strong> Base</p>

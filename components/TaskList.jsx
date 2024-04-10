@@ -249,7 +249,7 @@ const TaskList = () => {
           console.log("In here 2");
           setStatus((oldVal) => ({
             ...oldVal,
-            1: "Join Server",
+            1: <a href="https://discord.gg/amewkxzs7J" target="_blank" rel="noopener noreferrer" className="text-white hover:underline">Join Server</a>,
           }));
           return;
         }
