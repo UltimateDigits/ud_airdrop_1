@@ -21,6 +21,7 @@ import {
   RainbowKitProvider,
 } from "@rainbow-me/rainbowkit";
 import Navbar_comp from "../components/Navbar_comp";
+
 const config = getDefaultConfig({
   appName: "Airdrop Hunters",
   projectId: "db1b8a46ffa835bd9a48a89ff540f990",
