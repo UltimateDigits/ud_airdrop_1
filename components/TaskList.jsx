@@ -10,7 +10,7 @@ const rows = [
     key: 1,
     Quest: "Join Our Discord",
     Points: "100 Ultimate Points",
-    de1: "Join and get verified on Discord.",
+    de1: "Join and get verified on Discord",
     link: "https://discord.gg/amewkxzs7J",
   },
   {
@@ -25,14 +25,14 @@ const rows = [
     key: 3,
     Quest: "Mint the Ultimate Points Genesis NFT",
     Points: "100 Ultimate Points",
-    de1:"Free mint on Base. You can get gas token from Jumper Exchange.",
+    de1:"Free mint on Base. You can get gas token from Jumper Exchange",
     link: "https://jumper.exchange/refuel",
   },
   {
     key: 4,
     Quest: "HODL the Ultimate Points Genesis NFT",
     Points: "10 Ultimate Points",
-    de1:"Free mint on Base. You can get gas token from Jumper Exchange.",
+    de1:"Free mint on Base. You can get gas token from Jumper Exchange",
     link: "https://jumper.exchange/refuel",
     de2:"per day",
   },
@@ -57,7 +57,7 @@ const rows = [
 function renderDescription(description, link) {
   return (
     <>
-      {description} {link && <span><strong><a href={link} target="_blank" rel="noopener noreferrer" className="text-white hover:underline">Join here</a></strong></span>}
+      {description} {link && <span><strong><a href={link} target="_blank" rel="noopener noreferrer" className="text-white hover:underline">here</a></strong></span>}
     </>
   );
 }
