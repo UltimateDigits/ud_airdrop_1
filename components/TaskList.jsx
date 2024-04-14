@@ -25,14 +25,15 @@ const rows = [
     key: 3,
     Quest: "Mint the Ultimate Points Genesis NFT",
     Points: "100 Ultimate Points",
-    de1:"Free mint on Base",
+    de1:"Free mint on Base. You can get gas token from Jumper Exchange.",
+    link: "https://jumper.exchange/refuel",
   },
   {
     key: 4,
     Quest: "HODL the Ultimate Points Genesis NFT",
     Points: "10 Ultimate Points",
-
-    de1:"Free mint on Base",
+    de1:"Free mint on Base. You can get gas token from Jumper Exchange.",
+    link: "https://jumper.exchange/refuel",
     de2:"per day",
   },
 
