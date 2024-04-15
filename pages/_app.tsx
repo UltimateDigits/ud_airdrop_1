@@ -21,7 +21,6 @@ import {
   RainbowKitProvider,
 } from "@rainbow-me/rainbowkit";
 import Navbar_comp from "../components/Navbar_comp";
-import { GoogleTagManager } from "next/third-parties/google";
 
 const config = getDefaultConfig({
   appName: "Airdrop Hunters",
@@ -59,8 +58,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
             modalSize="compact"
           >
             <Navbar_comp />
-            <Component {...pageProps} />
-            <GoogleTagManager gtmId="G-TQV3B868Q6" />
+            <Component {...pageProps} />          
           </RainbowKitProvider>
         </QueryClientProvider>
       </WagmiProvider>
