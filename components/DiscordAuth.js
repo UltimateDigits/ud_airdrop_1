@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 const CLIENT_ID = '1214577403314311208';
-const REDIRECT_URI = 'http://localhost:3000/';
+const REDIRECT_URI = 'https://airdrop.ultimatedigits.com/';
 const SCOPE = 'identify+guilds';
 const TARGET_SERVER_ID = '1083617900759371776'; // Replace with the actual server ID
 const TARGET_SERVER_NAME = 'Ultimate Digits'; // Replace with the actual server ID
