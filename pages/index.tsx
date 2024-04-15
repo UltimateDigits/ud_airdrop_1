@@ -72,14 +72,6 @@ const Home = () => {
           href="https://framerusercontent.com/images/kqpEjtcCnXlCFGRaBKxXTkhc.svg"
           rel="shortcut icon"
         />
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-TQV3B868Q6"></script>
-        <script>
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-
-          gtag('config', 'G-TQV3B868Q6');
-        </script>
       </Head>
       <main className={styles.main}>
         <Card3 />
