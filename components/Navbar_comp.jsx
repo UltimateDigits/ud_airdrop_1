@@ -82,7 +82,7 @@ const Navbar_comp = () => {
       }
     },
     onDisconnect: () => {
-      signOut();
+      signOut({ callbackUrl: 'https://airdrop.ultimatedigits.com/' });
     },
   });
   
