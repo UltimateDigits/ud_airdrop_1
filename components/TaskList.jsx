@@ -69,6 +69,7 @@ const rows = [
     Points: "2000 Ultimate Points",
     de1: "Mint your unique Ethereum number NFT and earn points",
     link: "https://degen.ultimatedigits.com/", 
+    de2: "per NFT",
   },
   
 ];
