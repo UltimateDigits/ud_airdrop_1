@@ -6,7 +6,7 @@ import {
 import {
 
     baseSepolia,base,
-    mainnet
+    mainnet,degen
 } from "viem/chains";
 //TODO: @adielliot37 change to prod data
 const publicClient = createPublicClient({
@@ -18,6 +18,17 @@ const publicClient1 = createPublicClient({
     chain: mainnet,
     transport: http("https://eth-mainnet.g.alchemy.com/v2/QuvsBXmbep4JiOmQQI-W0b4Kj6MY-GWm")
 })
+
+const publicClient2 = createPublicClient({
+    chain: base,
+    transport: http("https://base-mainnet.g.alchemy.com/v2/2EvLZSldPDl24uXgknt1t7n1MpweBJWh")
+})
+
+const publicClient3 = createPublicClient({
+    chain: degen,
+    transport: http("https://666666666.rpc.thirdweb.com")
+})
+
 
 export const check_nft_ownership = async (address) => {
     const balance = await publicClient.readContract({
@@ -45,3 +56,24 @@ export const check_nft_ownership1 = async (address) => {
   };
   
 
+  export const degen_token = async (address) => {
+    const balance = await publicClient2.readContract({
+      address: '0x4ed4e862860bed51a9570b96d89af5e1b0efefed',
+      abi: parseAbi(['function balanceOf(address) view returns (uint256)']),
+      functionName: 'balanceOf',
+      args: [address],
+    });
+  
+    return Number(balance); 
+  };
+
+  export const degen_NFT = async (address) => {
+    const balance = await publicClient3.readContract({
+      address: '0x080dB0b9281e23AF7Df31985B846Ad05a615565E',
+      abi: parseAbi(['function balanceOf(address) view returns (uint256)']),
+      functionName: 'balanceOf',
+      args: [address],
+    });
+  
+    return Number(balance); 
+  };

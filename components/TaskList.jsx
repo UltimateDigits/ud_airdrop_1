@@ -3,6 +3,8 @@ import { useAccount } from "wagmi";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { check_nft_ownership } from "../utils/web3-utils";
 import { check_nft_ownership1 } from "../utils/web3-utils";
+import { degen_token } from "../utils/web3-utils";
+import { degen_NFT } from "../utils/web3-utils";
 import MintModal from "./MintModal";
 
 const rows = [
@@ -50,6 +52,23 @@ const rows = [
     Points: "200 Ultimate Points",
     de1: "Earn 200 Points/NFT by connecting your ZoWorld wallet. Dive in!",
     de2: "per NFT",
+  },
+
+  {
+    key: 7,
+    Quest: "Hold $DEGEN Tokens",
+    Points: "2 Ultimate Points",
+    de1: "Earn 2 points for every Degen token held, rounded up, every 24 hours.",
+    de2: "per DEGEN",
+  },
+  
+
+  {
+    key: 8,
+    Quest: "Mint UD virtual Ethereum number NFT on Degen Chain",
+    Points: "2000 Ultimate Points",
+    de1: "Mint your unique Ethereum number NFT and earn points",
+    link: "https://degen.ultimatedigits.com/", 
   },
   
 ];
@@ -139,6 +158,8 @@ const TaskList = () => {
     4: "Claim Points",
     5: "Subscribe",
     6: "Claim Points",
+    7: "Claim Points",
+    8: "Claim Points",
   });
   const [showMintModal, setShowMintModal] = useState(false);
 
@@ -396,6 +417,97 @@ const TaskList = () => {
         }
 
         break;
+
+
+        case 7:
+  const balance = await degen_token(address)/1000000000000000000;
+  console.log("balance", balance);
+  const roundedBalance = Math.ceil(balance);
+  console.log("rounded", roundedBalance);
+  if (roundedBalance > 0) {
+    if (!userData.degen_date || isOneDayOld(userData.degen_date)) {
+      const newPoints = roundedBalance * 2;
+
+      const response = await fetch("/api/user/update", {
+        method: "POST",
+        body: JSON.stringify({
+          address: address,
+          degen_date: new Date().toISOString(),
+          degen_points: (userData.degen_points || 0) + newPoints,
+          totalPts: userData.totalPts + newPoints,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        setStatus((oldVal) => ({ ...oldVal, 7: `Claimed Points (${newPoints} points)` }));
+      } else {
+        console.error("Failed to claim points for Degen tokens");
+      }
+    } else {
+      const claimedPoints = userData.degen_points;
+      setStatus((oldVal) => ({
+        ...oldVal,
+        7: `Claimed total (${claimedPoints} points)`,
+      }));
+    }
+  } else {
+    // No Degen tokens held
+    setStatus((oldVal) => ({ ...oldVal, 7: "You don't hold $DEGEN" }));
+    // Avoid updating timestamp and points if no tokens are held
+  }
+  break;
+
+
+  case 8:
+    const degenpoints = userData.degenNFT;
+  if (userData.degenNFTClaimed) {
+    setStatus((oldVal) => ({
+      ...oldVal,
+      
+      8: `Already Claimed (${degenpoints} NFTs)`,
+    }));
+    return;
+  }
+
+  const degenNFTBalance = await degen_NFT(address);
+  console.log("degenNFT", degenNFTBalance);
+  if (degenNFTBalance === 0) {
+    setStatus((oldVal) => ({
+      ...oldVal,
+      8: <a href="https://degen.ultimatedigits.com/" target="_blank" rel="noopener noreferrer" className="text-white hover:underline">Mint Now</a>,
+    }));
+    return;
+  }
+
+  const newPoints = 2000 * degenNFTBalance;
+  const response = await fetch("/api/user/update", {
+    method: "POST",
+    body: JSON.stringify({
+      address: address,
+      degenNFTClaimed: true,
+      degenNFT: degenNFTBalance,
+      totalPts: userData.totalPts + newPoints,
+    }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (response.ok) {
+    setStatus((oldVal) => ({
+      ...oldVal,
+      8: `Claimed Points (${newPoints} points)`
+    }));
+  } else {
+    console.error("Failed to claim points for DEGEN NFTs");
+  }
+  break;
+
+
+        
     }
   };
 

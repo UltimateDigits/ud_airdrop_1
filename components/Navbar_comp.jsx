@@ -26,70 +26,64 @@ const Logo = () => (
 );
 
 const update_referral = async (ref_add) => {
-  console.log("here3", ref_add);
   const resp = await fetch(`api/user/${ref_add}`);
   const ref_data = await resp.json();
-  await fetch("/api/user/update", {
-    method: "POST",
-    body: JSON.stringify({
-      address: ref_add,
-      totalRefferals: ref_data.totalRefferals + 1,
-    }),
-    headers: {
-      Accept: "*/*",
-      "Content-Type": "application/json",
-    },
-  });
+
+  // Update only if not already referred
+  if (!ref_data.alreadyReferred) {
+    await fetch("/api/user/update", {
+      method: "POST",
+      body: JSON.stringify({
+        address: ref_add,
+        totalRefferals: ref_data.totalRefferals + 1,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
 };
 
 const Navbar_comp = () => {
   const { isConnected, address } = useAccount();
   const [discordData, setDiscordData] = useState("");
-  const [pathname, setPathname] = useState("");
   const router = useRouter();
   const searchParams = useSearchParams();
-
   const { data: session } = useSession();
+
   useAccountEffect({
     onConnect: async (data) => {
-      const res = await fetch(`/api/user/${data.address}`);
-      const userData = await res.json();
-      if (userData == null) {
-        const body = searchParams.has("ref")
-          ? JSON.stringify({
-              address: data.address,
-              refferedBy: searchParams.get("ref"),
-            })
-          : JSON.stringify({
-              address: data.address,
-            });
-        fetch("api/user", {
-          method: "POST",
-          body: body,
-          headers: {
-            Accept: "*/*",
-            "Content-Type": "application/json",
-          },
-        }).then(async()=>{
-          console.log("here");
-          if(searchParams.has("ref")){
-            console.log("here2");
-            await update_referral(String(searchParams.get("ref")))
-          }
-        });
-      } else {
-        setDiscordData(userData.discord_id);
+      try {
+        const res = await fetch(`/api/user/${data.address}`);
+        const userData = await res.json();
+
+        if (!userData || Object.keys(userData).length === 0) {
+          const body = JSON.stringify({
+            address: data.address,
+            refferedBy: searchParams.get("ref") || undefined,
+          });
+          const userCreationResponse = await fetch("api/user", {
+            method: "POST",
+            body: body,
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+        } else {
+          setDiscordData(userData.discord_id);
+        }
+      } catch (error) {
+        console.error("Error in onConnect:", error);
       }
     },
     onDisconnect: () => {
       signOut();
     },
   });
-  
+
   const update_db_discord = async () => {
     if (!isConnected || !session || discordData !== "") return;
-  
-    // User attempts to link Discord
+
     try {
       const response = await fetch("/api/user/update", {
         method: "POST",
@@ -101,17 +95,19 @@ const Navbar_comp = () => {
           discord_id: session.user.name,
         }),
       });
-  
+
       if (response.ok) {
         setDiscordData(session.user.name);
+        if (searchParams.has("ref") && !sessionStorage.getItem("referralUpdated")) {
+          await update_referral(String(searchParams.get("ref")));
+          sessionStorage.setItem("referralUpdated", "true");
+        }
       } else {
         const data = await response.json();
-        // Handle error code 11000 from MongoDB for duplicate key
         if (data.error && data.error.code === 11000) {
-          // Check if the error has already been shown in the current session
           if (!sessionStorage.getItem("discordLinkErrorShown")) {
             alert("This Discord is already linked to another address.");
-            sessionStorage.setItem("discordLinkErrorShown", "true"); // Prevent alert from showing again in the session
+            sessionStorage.setItem("discordLinkErrorShown", "true");
           }
         } else {
           console.log("Failed to update Discord ID. Please try again.");
@@ -121,11 +117,10 @@ const Navbar_comp = () => {
       console.error("Error updating Discord ID:", error);
     }
   };
-  
-    
-    useEffect(() => {
-      if (session) update_db_discord();
-    }, [session, isConnected, address, discordData]);
+
+  useEffect(() => {
+    if (session) update_db_discord();
+  }, [session, isConnected, address, discordData]);
 
   return (
     <Navbar
@@ -186,7 +181,7 @@ const Navbar_comp = () => {
                 width={30}
                 height={30}
                 alt="Discord logo"
-                unoptimized={true} // Use unoptimized prop if you encounter issues with external image loading
+                unoptimized={true} 
               />
               <p>{discordData === "" ? "Link Discord" : discordData}</p>
             </div>

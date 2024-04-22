@@ -34,6 +34,10 @@ export const connect = async () => {
     email: { type: String, default: "" },
     ZoNFTclaimed: { type: Boolean, default: false },
     ZoBalance: { type: Number, default: 0 },
+    degen_date: { type: Date, default: null },
+    degen_points: { type: Number, default: 0 },
+    degenNFTClaimed: { type: Boolean, default: false },
+    degenNFT: { type: Number, default: 0 },
   });
 
   const User = mongoose.models.Users || mongoose.model("Users", userSchema);

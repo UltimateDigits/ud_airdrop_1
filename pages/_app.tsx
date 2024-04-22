@@ -13,6 +13,7 @@ import {
   polygon,
   sepolia,
   zora,
+  degen,
 } from "wagmi/chains";
 import {
   darkTheme,
@@ -34,6 +35,7 @@ const config = getDefaultConfig({
     base,
     zora,
     baseSepolia,
+    degen,
     ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true"
       ? [baseSepolia]
       : []),
