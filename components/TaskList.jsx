@@ -23,6 +23,17 @@ const rows = [
     de2: "per day",
     actionLink: "https://discord.com/channels/1083617900759371776/1088848310854496337",
   },
+
+  {
+    key: 8,
+    Quest: "Mint your virtual Degen mobile number (+999-DEGEN-XXXX)",
+    Points: "2000 Ultimate Points",
+    de1: "Mint NFT on Degen Chain and earn a $DEGEN + $ULT airdrop",
+    link: "https://degen.ultimatedigits.com/", 
+    de2: "per NFT",
+    isNew: true 
+  },
+
   {
     key: 3,
     Quest: "Mint the Ultimate Points Genesis NFT",
@@ -46,31 +57,25 @@ const rows = [
     de1: "Takes under 1 minute",
   },
 
+
+  {
+    key: 7,
+    Quest: "HODL $DEGEN Tokens",
+    Points: "2 Ultimate Points",
+    de1: "Earn 2 points for every Degen token held, rounded up, every 24 hours.",
+    de2: "per DEGEN",
+    isNew: true 
+  },
+  
   {
     key: 6,
-    Quest: "Hold Founders of ZoWorld NFTs",
+    Quest: "HODL Founders of ZoWorld NFTs",
     Points: "200 Ultimate Points",
     de1: "Earn 200 Points/NFT by connecting your ZoWorld wallet. Dive in!",
     de2: "per NFT",
   },
 
-  {
-    key: 7,
-    Quest: "Hold $DEGEN Tokens",
-    Points: "2 Ultimate Points",
-    de1: "Earn 2 points for every Degen token held, rounded up, every 24 hours.",
-    de2: "per DEGEN",
-  },
-  
 
-  {
-    key: 8,
-    Quest: "Mint UD virtual Ethereum number NFT on Degen Chain",
-    Points: "2000 Ultimate Points",
-    de1: "Mint your unique Ethereum number NFT and earn points",
-    link: "https://degen.ultimatedigits.com/", 
-    de2: "per NFT",
-  },
   
 ];
 
@@ -82,6 +87,19 @@ function renderDescription(description, link) {
   );
 }
 
+
+function renderQuestName(quest, isNew) {
+  return (
+    <>
+      {isNew && (
+        <span className="inline-block mr-2 text-xs font-bold px-3 py-1 bg-green-600 text-white rounded-lg shadow-sm">
+          New
+        </span>
+      )}
+      {quest}
+    </>
+  );
+}
 const columns = [
   {
     key: "Quest",
@@ -533,25 +551,25 @@ const TaskList = () => {
             {rows.map((row) => (
               <tr className="bg-none text-white text-[18px]" key={row.key}>
                 <td className="px-8 py-4">
-                  {row.Quest}
+                  {renderQuestName(row.Quest, row.isNew)}
                   <div className="text-white text-[12px]">
-                  {renderDescription(row.de1, row.link)}
-                </div>
-              </td>
-              <td className="px-8 py-4">
-                {row.Points}
-                <div className="px-1 text-white text-[12px]">{row.de2}</div>
-              </td>
-              <td className="px-8 py-4">
-                {isConnected ? (
-                  <button
-                    className="px-4 py-2 bg-blue-500 text-white font-bold rounded-full hover:bg-blue-700 transition duration-300"
-                    onClick={() => claimPoints(row.key, row.actionLink)}
-                  >
-                    {status[row.key]}
-                  </button>
-                ) : (
-                  "*****"
+                    {renderDescription(row.de1, row.link)}
+                  </div>
+                </td>
+                <td className="px-8 py-4">
+                  {row.Points}
+                  <div className="px-1 text-white text-[12px]">{row.de2}</div>
+                </td>
+                <td className="px-8 py-4">
+                  {isConnected ? (
+                    <button
+                      className="px-4 py-2 bg-blue-500 text-white font-bold rounded-full hover:bg-blue-700 transition duration-300"
+                      onClick={() => claimPoints(row.key, row.actionLink)}
+                    >
+                      {status[row.key]}
+                    </button>
+                  ) : (
+                    "*****"
                   )}
                 </td>
               </tr>
