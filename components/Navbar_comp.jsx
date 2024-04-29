@@ -25,24 +25,31 @@ const Logo = () => (
   </svg>
 );
 
-const update_referral = async (ref_add) => {
-  const resp = await fetch(`api/user/${ref_add}`);
+const update_referral = async (ref_add, new_user_add) => {
+  const resp = await fetch(`/api/user/${ref_add}`);
   const ref_data = await resp.json();
 
   // Update only if not already referred
   if (!ref_data.alreadyReferred) {
+    const referralUpdate = {
+      address: ref_add,
+      totalRefferals: ref_data.totalRefferals + 1,
+      referrals: [
+        ...ref_data.referrals,
+        { referredAddress: new_user_add, referredAt: new Date().toISOString() }
+      ]
+    };
+
     await fetch("/api/user/update", {
       method: "POST",
-      body: JSON.stringify({
-        address: ref_add,
-        totalRefferals: ref_data.totalRefferals + 1,
-      }),
+      body: JSON.stringify(referralUpdate),
       headers: {
         "Content-Type": "application/json",
       },
     });
   }
 };
+
 
 const Navbar_comp = () => {
   const { isConnected, address } = useAccount();
@@ -56,7 +63,7 @@ const Navbar_comp = () => {
       try {
         const res = await fetch(`/api/user/${data.address}`);
         const userData = await res.json();
-
+    
         if (!userData || Object.keys(userData).length === 0) {
           const body = JSON.stringify({
             address: data.address,
@@ -69,6 +76,11 @@ const Navbar_comp = () => {
               "Content-Type": "application/json",
             },
           });
+    
+          // Call update_referral if there is a referrer
+          if (searchParams.has("ref")) {
+            update_referral(searchParams.get("ref"), data.address);
+          }
         } else {
           setDiscordData(userData.discord_id);
         }
@@ -76,6 +88,7 @@ const Navbar_comp = () => {
         console.error("Error in onConnect:", error);
       }
     },
+    
     onDisconnect: () => {
       signOut();
     },
@@ -159,6 +172,9 @@ const Navbar_comp = () => {
         </NavbarItem>
         <NavbarItem isActive={router.pathname == "/howto"}>
           <Link href="/howto">How-To</Link>
+        </NavbarItem>
+        <NavbarItem isActive={router.pathname == "/referhistory"}>
+          <Link href="/referhistory">Refer History</Link>
         </NavbarItem>
       </NavbarContent>
   

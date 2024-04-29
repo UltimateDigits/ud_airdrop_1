@@ -1,4 +1,3 @@
-//IMPORT MONGOOSE
 import mongoose, { Model } from "mongoose";
 
 // CONNECTING TO MONGOOSE (Get Database Url from .env.local)
@@ -8,8 +7,20 @@ const { DATABASE_URL } = process.env;
 export const connect = async () => {
   const conn = await mongoose
     .connect(DATABASE_URL as string)
-    .catch((err) => console.log(err));
+    .catch((err) => console.error(err));
   console.log("Mongoose Connection Established");
+
+  const referralSchema = new mongoose.Schema({
+    referredAddress: {
+      type: String,
+      required: true,
+    },
+    referredAt: {
+      type: Date,
+      required: true,
+      default: Date.now,
+    }
+  });
 
   const userSchema = new mongoose.Schema({
     address: {
@@ -38,6 +49,8 @@ export const connect = async () => {
     degen_points: { type: Number, default: 0 },
     degenNFTClaimed: { type: Boolean, default: false },
     degenNFT: { type: Number, default: 0 },
+    referrals: [referralSchema], // Embedding the referral schema
+    joinedAt: { type: Date, default: Date.now }, // Time when user was created
   });
 
   const User = mongoose.models.Users || mongoose.model("Users", userSchema);
