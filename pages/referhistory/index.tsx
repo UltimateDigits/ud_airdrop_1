@@ -34,11 +34,13 @@ const ReferHistory = () => {
                 const response = await fetch(`/api/user/${address}`);
                 if (response.ok) {
                     const userData = await response.json();
-                    // Filter out empty referred addresses, sort by date in descending order, and take the top 15
-                    const filteredAndSortedReferrals = (userData.referrals || [])
-                        .filter(ref => ref.referredAddress)
-                        .sort((a, b) => new Date(b.referredAt).getTime() - new Date(a.referredAt).getTime())
-                        .slice(0, 15);  // Limiting to the top 15 referrals
+                    const referrals = userData.referrals as ReferralData[]; 
+                    const filteredAndSortedReferrals = referrals
+                        .filter((ref: ReferralData) => ref.referredAddress) 
+                        .sort((a: ReferralData, b: ReferralData) => 
+                            new Date(b.referredAt).getTime() - new Date(a.referredAt).getTime()
+                        )
+                        .slice(0, 15); // Limiting to the top 15 referrals
                     setReferrals(filteredAndSortedReferrals);
                 } else {
                     console.error("Failed to fetch user data");

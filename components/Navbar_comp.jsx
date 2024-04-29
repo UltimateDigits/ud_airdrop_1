@@ -26,7 +26,7 @@ const Logo = () => (
 );
 
 const update_referral = async (ref_add, new_user_add) => {
-  const resp = await fetch(`/api/user/${ref_add}`);
+  const resp = await fetch(`api/user/${ref_add}`);
   const ref_data = await resp.json();
 
   // Update only if not already referred
