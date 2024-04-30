@@ -77,3 +77,11 @@ export const check_nft_ownership1 = async (address) => {
   
     return Number(balance); 
   };
+
+  export const native_token_balance_degen_chain = async (address) => {
+    const balance = await publicClient3.getBalance({
+        address: address
+    });
+
+    return Number(balance);
+};

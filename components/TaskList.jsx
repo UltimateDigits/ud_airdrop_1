@@ -6,6 +6,7 @@ import { check_nft_ownership1 } from "../utils/web3-utils";
 import { degen_token } from "../utils/web3-utils";
 import { degen_NFT } from "../utils/web3-utils";
 import MintModal from "./MintModal";
+import {native_token_balance_degen_chain} from "../utils/web3-utils";
 
 const rows = [
   {
@@ -440,9 +441,14 @@ const TaskList = () => {
 
         case 7:
   const balance = await degen_token(address)/1000000000000000000;
-  console.log("balance", balance);
-  const roundedBalance = Math.ceil(balance);
-  console.log("rounded", roundedBalance);
+  const degen_balance = await native_token_balance_degen_chain(address)/1000000000000000000;
+  //console.log("Degen native balance", degen_balance);
+  //console.log("balance", balance);
+  const roundedBalance_base = Math.ceil(balance);
+  const roundedBalance_degen = Math.ceil(degen_balance);
+  console.log(`base_chain: ${roundedBalance_base} Degen_chain: ${roundedBalance_degen}`);
+  const roundedBalance = roundedBalance_base + roundedBalance_degen ;
+  console.log("Total", roundedBalance);
   if (roundedBalance > 0) {
     if (!userData.degen_date || isOneDayOld(userData.degen_date)) {
       const newPoints = roundedBalance * 2;
