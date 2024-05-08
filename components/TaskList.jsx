@@ -5,6 +5,9 @@ import { check_nft_ownership } from "../utils/web3-utils";
 import { check_nft_ownership1 } from "../utils/web3-utils";
 import { degen_token } from "../utils/web3-utils";
 import { degen_NFT } from "../utils/web3-utils";
+import { manta_token_bsc } from "../utils/web3-utils"
+import { manta_nominator } from "../utils/web3-utils"
+import { manta_token_pacific } from "../utils/web3-utils"
 import MintModal from "./MintModal";
 import {native_token_balance_degen_chain} from "../utils/web3-utils";
 
@@ -13,49 +16,73 @@ const rows = [
     key: 1,
     Quest: "Join Our Discord",
     Points: "100 Ultimate Points",
-    de1: "Join and get verified on Discord",
+    de1: "Join and get verified on Discord.",
     link: "https://discord.gg/amewkxzs7J",
   },
   {
     key: 2,
     Quest: "Daily Discord Check-in",
     Points: "10 Ultimate Points",
-    de1: "Type /gm and paste your wallet address",
+    de1: "Type /gm and paste your wallet address.",
     de2: "per day",
     actionLink: "https://discord.com/channels/1083617900759371776/1088848310854496337",
   },
 
-  {
-    key: 8,
-    Quest: "Mint your virtual Degen mobile number (+999-DEGEN-XXXX)",
-    Points: "2000 Ultimate Points",
-    de1: "Mint NFT on Degen Chain and earn a $DEGEN + $ULT airdrop",
-    link: "https://degen.ultimatedigits.com/", 
-    de2: "per NFT",
-    isNew: true 
-  },
 
   {
     key: 3,
     Quest: "Mint the Ultimate Points Genesis NFT",
     Points: "100 Ultimate Points",
-    de1:"Free mint on Base. You can get gas token from Stargate Finance",
+    de1:"Free mint on Base. You can get gas token from Stargate Finance.",
     link: "https://stargate.finance/transfer",
   },
   {
     key: 4,
     Quest: "HODL the Ultimate Points Genesis NFT",
     Points: "10 Ultimate Points",
-    de1:"Free mint on Base. You can get gas token from Stargate Finance",
+    de1:"Free mint on Base. You can get gas token from Stargate Finance.",
     link: "https://stargate.finance/transfer",
     de2:"per day",
   },
+
+  {
+    key: 9,
+    Quest: "Stake $MANTA to earn daily rewards",
+    Points: "4 Ultimate Points",
+    de1: " 4 Ultimate Points daily for every $MANTA token staked. Claim every 24 hours.",
+    de2: "Per $MANTA staked",
+    link: "https://app.manta.network/manta/stake",
+    isNew: true,
+  },
+  {
+    key: 10,
+    Quest: "HODL $MANTA to earn daily rewards",
+    Points: "2 Ultimate Points",
+    de1: " 2 Ultimate Points daily for every $MANTA token held in your Polkadot/MANTA wallet. Claim every 24 hours.",
+    de2: "Per $MANTA held",
+  
+    isNew: true 
+  },
+
+  {
+    key: 8,
+    Quest: "Mint your virtual Degen mobile number (+999-DEGEN-XXXX)",
+    Points: "2000 Ultimate Points",
+    de1: "Mint NFT on Degen Chain and earn a $DEGEN + $ULT airdrop.",
+    link: "https://degen.ultimatedigits.com/", 
+    de2: "per NFT",
+   
+  },
+
+ 
+ 
 
   {
     key: 5,
     Quest: "Subscribe to our Ultimate Newsletter",
     Points: "250 Ultimate Points",
     de1: "Takes under 1 minute",
+    inEnded: true,
   },
 
 
@@ -65,7 +92,7 @@ const rows = [
     Points: "2 Ultimate Points",
     de1: "Earn 2 points for every Degen token held, rounded up, every 24 hours.",
     de2: "per DEGEN",
-    isNew: true 
+   
   },
   
   {
@@ -74,7 +101,9 @@ const rows = [
     Points: "200 Ultimate Points",
     de1: "Earn 200 Points/NFT by connecting your ZoWorld wallet. Dive in!",
     de2: "per NFT",
+    inEnded: true,
   },
+
 
 
   
@@ -83,11 +112,10 @@ const rows = [
 function renderDescription(description, link) {
   return (
     <>
-      {description} {link && <span><strong><a href={link} target="_blank" rel="noopener noreferrer" className="text-white hover:underline">here</a></strong></span>}
+      {description} {link && <span><strong><a href={link} target="_blank" rel="noopener noreferrer" className="text-white hover:underline">Link →</a></strong></span>}
     </>
   );
 }
-
 
 function renderQuestName(quest, isNew) {
   return (
@@ -104,7 +132,7 @@ function renderQuestName(quest, isNew) {
 const columns = [
   {
     key: "Quest",
-    label: "Quests",
+    label: "Active Quests",
   },
   {
     key: "Points",
@@ -166,6 +194,7 @@ const TaskList = () => {
   const [showEmailPopup, setShowEmailPopup] = useState(false);
   const [email, setEmail] = useState("");
   const { data: session } = useSession();
+  const [isClient, setIsClient] = useState(false);
   const [ispOpen, setOpen] = useState(false);
   const openModal = () => {
     setOpen(true);
@@ -180,10 +209,13 @@ const TaskList = () => {
     6: "Claim Points",
     7: "Claim Points",
     8: "Claim Points",
+    9: "Claim Points",
+    10: "Claim Points",
   });
   const [showMintModal, setShowMintModal] = useState(false);
 
   useEffect(() => {
+    setIsClient(true); 
     const get_data = async () => {
       const res = await fetch(`/api/user/${address}`);
      // console.log("response:", res);
@@ -442,8 +474,14 @@ const TaskList = () => {
         case 7:
   const balance = await degen_token(address)/1000000000000000000;
   const degen_balance = await native_token_balance_degen_chain(address)/1000000000000000000;
+  // const manta_balance_pacific = await manta_token_pacific(address)/1000000000000000000 ;
+  // const manta_balance_bsc = await manta_token_bsc(address)/1000000000000000000 ;
+//  const nominator1 = await manta_nominator('dfYFKyRWDhPQZYPkurjQksf4kphns55nTg1ccYNAJMdabPQXt')/1000000000000000000 ;
+ // const nom2 = Math.ceil(nominator1);
   //console.log("Degen native balance", degen_balance);
-  //console.log("balance", balance);
+ // console.log("manta balance pacific", manta_balance_pacific);
+ // console.log("manta balance bsc", manta_balance_bsc);
+ // console.log("nom",nom2);
   const roundedBalance_base = Math.ceil(balance);
   const roundedBalance_degen = Math.ceil(degen_balance);
   console.log(`base_chain: ${roundedBalance_base} Degen_chain: ${roundedBalance_degen}`);
@@ -531,69 +569,185 @@ const TaskList = () => {
   }
   break;
 
+  case 9:
+        if (!userData.polka_address) {
+          setStatus((oldVal) => ({ ...oldVal, 9: "Connect Polkadot Wallet" }));
+          return;
+        }
+        
+        const mantaStaked = await manta_nominator(userData.polka_address)/1000000000000000000;
+        const mantaStakedAmount = Math.ceil(mantaStaked);
+        console.log("Manta Staked", mantaStakedAmount);
+        if (mantaStakedAmount === 0) {
+          setStatus((oldVal) => ({ ...oldVal, 9: "No MANTA staked" }));
+          return;
+        }
 
+        const newPoints1 = mantaStakedAmount * 4;
+        if (!userData.manta_staked_date || isOneDayOld(userData.manta_staked_date)) {
+          const response = await fetch("/api/user/update", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              address: address,
+              manta_staked_date: new Date().toISOString(),
+              manta_staked_points: (userData.manta_staked_points || 0) + newPoints1,
+              totalPts: userData.totalPts + newPoints1,
+              total_manta_staked: mantaStakedAmount,
+            }),
+          });
+
+          if (response.ok) {
+            setStatus((oldVal) => ({ ...oldVal, 9: `Claimed (${newPoints1} points)` }));
+          } else {
+            console.error("Failed to claim points for MANTA Stakers");
+          }
+        } else {
+          const claimedPoints = userData.manta_staked_points;
+          setStatus((oldVal) => ({
+            ...oldVal,
+            9: `Claimed total (${claimedPoints} points)`,
+          }));
+        }
+        break;
+
+        case 10:
+  
+          const manta_balance_pacific = await manta_token_pacific(address)/1000000000000000000 ;
+          const manta_balance_bsc = await manta_token_bsc(address)/1000000000000000000 ;
+     
+          console.log("manta balance pacific", manta_balance_pacific);
+          console.log("manta balance bsc", manta_balance_bsc);
+       
+          const roundedBalance_pacific = Math.ceil(manta_balance_pacific);
+          const roundedBalance_bsc = Math.ceil(manta_balance_bsc);
+          console.log(`Pacific: ${roundedBalance_pacific} BSC: ${roundedBalance_bsc}`);
+          const totalmanta = roundedBalance_pacific + roundedBalance_bsc ;
+          console.log("Total", totalmanta);
+          if (totalmanta > 0) {
+            if (!userData.manta_date || isOneDayOld(userData.manta_date)) {
+              const newPoints_manta = totalmanta * 2;
+        
+              const response = await fetch("/api/user/update", {
+                method: "POST",
+                body: JSON.stringify({
+                  address: address,
+                  manta_date: new Date().toISOString(),
+                  manta_points: (userData.manta_points || 0) + newPoints_manta,
+                  total_manta: totalmanta,
+                  totalPts: userData.totalPts + newPoints_manta,
+                }),
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              });
+        
+              if (response.ok) {
+                setStatus((oldVal) => ({ ...oldVal, 7: `Claimed Points (${newPoints_manta} points)` }));
+              } else {
+                console.error("Failed to claim points for MANTA tokens");
+              }
+            } else {
+              const claimedPoints_manta = userData.manta_points;
+              setStatus((oldVal) => ({
+                ...oldVal,
+                10: `Claimed total (${claimedPoints_manta} points)`,
+              }));
+            }
+          } else {
+            // No Degen tokens held
+            setStatus((oldVal) => ({ ...oldVal, 10: "You don't hold $MANTA" }));
+            // Avoid updating timestamp and points if no tokens are held
+          }
+          break;
+        
         
     }
   };
 
+  const activeRows = rows.filter(row => !row.inEnded);
+  const endedRows = rows.filter(row => row.inEnded);
+    
+  
+  const renderRows = (rows, isEnded = false) => {
+    return rows.map((row) => (
+      <tr className="bg-none text-white text-[18px]" key={row.key}>
+        <td className="px-8 py-4">
+          {renderQuestName(row.Quest, row.isNew)}
+          <div className="text-white text-[12px]">
+            {renderDescription(row.de1, row.link)}
+          </div>
+        </td>
+        <td className="px-8 py-4">
+          {row.Points}
+          <div className="px-1 text-white text-[12px]">{row.de2}</div>
+        </td>
+        <td className="px-8 py-4">
+          {isClient && isConnected ? (
+            <button
+              className={`px-4 py-2 text-white font-bold rounded-full transition duration-300 ${isEnded ? "bg-gray-500 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-700"}`}
+              onClick={() => !isEnded && claimPoints(row.key, row.actionLink)}
+              disabled={isEnded}
+            >
+              {status[row.key]}
+            </button>
+          ) : (
+            "*****"
+          )}
+        </td>
+      </tr>
+    ));
+  };
+
+
   return (
     <>
-      <div className="relative w-[70%] overflow-x-auto shadow-md sm:rounded-lg">
-        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-          <caption className="px-8 pt-10 text-[42px] text-left text-gray-900 text-white">
-            Quests for Season 1
-            <hr className="mt-10 mb-5" />
-          </caption>
-          <thead className="text-[22px] bg-none text-gray-100">
-            <tr>
-              {columns.map((column) => (
-                <th scope="col" className="px-8 py-3" key={column.key}>
-                  {column.label}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row) => (
-              <tr className="bg-none text-white text-[18px]" key={row.key}>
-                <td className="px-8 py-4">
-                  {renderQuestName(row.Quest, row.isNew)}
-                  <div className="text-white text-[12px]">
-                    {renderDescription(row.de1, row.link)}
-                  </div>
-                </td>
-                <td className="px-8 py-4">
-                  {row.Points}
-                  <div className="px-1 text-white text-[12px]">{row.de2}</div>
-                </td>
-                <td className="px-8 py-4">
-                  {isConnected ? (
-                    <button
-                      className="px-4 py-2 bg-blue-500 text-white font-bold rounded-full hover:bg-blue-700 transition duration-300"
-                      onClick={() => claimPoints(row.key, row.actionLink)}
-                    >
-                      {status[row.key]}
-                    </button>
-                  ) : (
-                    "*****"
-                  )}
-                </td>
+      {isClient && (  // Only render table on the client
+        <div className="relative w-[70%] overflow-x-auto shadow-md sm:rounded-lg">
+          <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            <caption className="px-8 pt-10 text-[42px] text-left text-white">
+              Quests for Season 1
+              <hr className="mt-10 mb-5 border-gray-400" />
+            </caption>
+            <thead className="text-[22px] text-gray-100">
+              <tr>
+                {columns.map((column) => (
+                  <th scope="col" className="px-8 py-3 border-b border-gray-700" key={column.key}>
+                    {column.label}
+                  </th>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody className="divide-y divide-gray-700">
+              {renderRows(activeRows)}
+            </tbody>
+            <tr>
+              <td colSpan={3}>
+                <hr className="my-5 border-gray-400" />
+              </td>
+            </tr>
+            <thead className="text-[22px] text-gray-100">
+              <tr>
+                <th scope="col" className="px-8 py-3 border-b border-gray-700" colSpan={3}>
+                  Ended Quests
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-700">
+              {renderRows(endedRows, true)}
+            </tbody>
+          </table>
+        </div>
+      )}
       {showMintModal && (
         <MintModal
           closeModal={() => setShowMintModal((prev) => !prev)}
           setStatus={setStatus}
         />
       )}
-
-      {/* <MintModal setStatus={setStatus} /> */}
       {showEmailPopup && (
         <div
-          className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center" // Adjusted for centering
+          className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center"
         >
           <div className="relative mx-auto p-5 border shadow-lg rounded-md bg-white">
             <div className="mt-3 text-center">
@@ -612,7 +766,7 @@ const TaskList = () => {
               <div className="items-center px-4 py-3">
                 <button
                   id="submit-btn"
-                  className="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300" // Changed background color
+                  className="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300"
                   onClick={submitEmail}
                 >
                   Subscribe

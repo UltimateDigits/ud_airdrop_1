@@ -40,7 +40,7 @@ const ScreenSizeWarning = () => {
             padding: '20px', // Ensure text doesn't overflow on small screens
             zIndex: 1000, // Ensure it's above other content
         }}>
-            Please access this page from a laptop or desktop
+            Mobile version coming soon. Please access this page from a laptop or desktop.
         </div>
     );
 };

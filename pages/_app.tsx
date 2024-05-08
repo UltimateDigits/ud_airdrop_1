@@ -24,6 +24,7 @@ import {
 import Navbar_comp from "../components/Navbar_comp";
 import { GoogleTagManager } from "@next/third-parties/google";
 
+
 const config = getDefaultConfig({
   appName: "Airdrop Hunters",
   projectId: "db1b8a46ffa835bd9a48a89ff540f990",
@@ -60,8 +61,10 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
             coolMode
             modalSize="compact"
           >
+          
             <Navbar_comp />
             <Component {...pageProps} />
+           
             <GoogleTagManager gtmId="G-TQV3B868Q6" />
           </RainbowKitProvider>
         </QueryClientProvider>

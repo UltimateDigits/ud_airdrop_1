@@ -4,7 +4,6 @@ import {
   NavbarBrand,
   NavbarContent,
   NavbarItem,
-  Button,
 } from "@nextui-org/react";
 import Link from "next/link";
 import Image from "next/image";
@@ -13,6 +12,11 @@ import { useAccount, useAccountEffect } from "wagmi";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
+import dynamic from 'next/dynamic';
+
+const Connect = dynamic(() => import('./Connect').then((mod) => mod.Connect), {
+  ssr: false,
+});
 
 const Logo = () => (
   <svg fill="none" height="36" viewBox="0 0 32 32" width="36">
@@ -50,10 +54,10 @@ const update_referral = async (ref_add, new_user_add) => {
   }
 };
 
-
 const Navbar_comp = () => {
   const { isConnected, address } = useAccount();
   const [discordData, setDiscordData] = useState("");
+  const [userData, setUserData] = useState(null);
   const router = useRouter();
   const searchParams = useSearchParams();
   const { data: session } = useSession();
@@ -63,13 +67,14 @@ const Navbar_comp = () => {
       try {
         const res = await fetch(`/api/user/${data.address}`);
         const userData = await res.json();
+        setUserData(userData);
     
         if (!userData || Object.keys(userData).length === 0) {
           const body = JSON.stringify({
             address: data.address,
             refferedBy: searchParams.get("ref") || undefined,
           });
-          const userCreationResponse = await fetch("api/user", {
+          await fetch("api/user", {
             method: "POST",
             body: body,
             headers: {
@@ -88,7 +93,6 @@ const Navbar_comp = () => {
         console.error("Error in onConnect:", error);
       }
     },
-    
     onDisconnect: () => {
       signOut();
     },
@@ -112,7 +116,7 @@ const Navbar_comp = () => {
       if (response.ok) {
         setDiscordData(session.user.name);
         if (searchParams.has("ref") && !sessionStorage.getItem("referralUpdated")) {
-          await update_referral(String(searchParams.get("ref")));
+          await update_referral(String(searchParams.get("ref")), address);
           sessionStorage.setItem("referralUpdated", "true");
         }
       } else {
@@ -133,7 +137,13 @@ const Navbar_comp = () => {
 
   useEffect(() => {
     if (session) update_db_discord();
+   // console.log("db session", session);
   }, [session, isConnected, address, discordData]);
+
+  // Function to truncate the address
+  const beatifyAddress = (address) => {
+    return `${address.slice(0, 3)}...${address.slice(-3)}`;
+  };
 
   return (
     <Navbar
@@ -177,32 +187,50 @@ const Navbar_comp = () => {
           <Link href="/referhistory">Refer History</Link>
         </NavbarItem>
       </NavbarContent>
-  
-      <NavbarContent justify="end">
+
+      <NavbarContent justify="end" className="flex items-center space-x-4">
         <NavbarItem>
           <ConnectButton chainStatus="icon" showBalance={false} showRecentTransactions={true}/>
         </NavbarItem>
+
+        {isConnected && (
+          <NavbarItem>
+          <div
+            className="relative group flex items-center space-x-2 bg-inherit h-[45px] p-1 rounded-lg border border-black px-3 cursor-pointer"
+            onClick={() => {
+              if (discordData === "") {
+                signIn("discord");
+              }
+            }}
+          >
+            <Image
+              src="https://www.cdnlogo.com/logos/d/15/discord.svg"
+              width={20}
+              height={20}
+              alt="Discord logo"
+              unoptimized={true}
+            />
+            <p className="text-sm truncate max-w-xs group-hover:max-w-none">
+              {discordData === "" ? "Link Discord" : discordData}
+            </p>
+            {/* Tooltip */}
+            {discordData && discordData !== "" && (
+              <span className="absolute bottom-full mb-1 left-0 right-0 bg-black text-white text-xs rounded-lg p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                {discordData}
+              </span>
+            )}
+          </div>
+        </NavbarItem>
+        )}
+
         <NavbarItem>
-          {isConnected ? (
-            <div
-              className="flex items-center justify-between space-x-2 ml-5 bg-inherit h-[45px] p-1 rounded-lg border border-black px-3 cursor-pointer"
-              onClick={() => {
-                if (discordData === "") {
-                  signIn("discord");
-                }
-              }}
-            >
-              <Image
-                src="https://www.cdnlogo.com/logos/d/15/discord.svg"
-                width={30}
-                height={30}
-                alt="Discord logo"
-                unoptimized={true} 
-              />
-              <p>{discordData === "" ? "Link Discord" : discordData}</p>
-            </div>
+          {isConnected && userData && userData.polka_address ? (
+            <div className="bg-gradient-to-r from-violet-500 to-violet-700 text-white rounded-lg p-2">
+            {beatifyAddress(userData.polka_address)}
+          </div>
+          
           ) : (
-            <></>
+            isConnected && <Connect />
           )}
         </NavbarItem>
       </NavbarContent>

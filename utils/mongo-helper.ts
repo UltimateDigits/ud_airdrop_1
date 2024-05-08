@@ -32,6 +32,11 @@ export const connect = async () => {
       index: { unique: true, dropDups: true },
       default: "",
     },
+   
+    polka_address: {
+      type: String,
+      index: { unique: true, dropDups: true },
+    },
     totalPts: { type: Number, default: 0 },
     totalRefferals: { type: Number, default: 0 },
     refferedBy: { type: String, default: "" },
@@ -51,6 +56,13 @@ export const connect = async () => {
     degenNFT: { type: Number, default: 0 },
     referrals: [referralSchema], // Embedding the referral schema
     joinedAt: { type: Date, default: Date.now }, // Time when user was created
+    manta_staked_date:{ type: Date, default: null },
+    manta_staked_points:{ type: Number, default: 0 },
+    total_manta_staked:{ type: Number, default: 0 },
+    manta_date: { type: Date, default: null },
+    manta_points:{ type: Number, default: 0 },
+    total_manta:{ type: Number, default: 0 },
+
   });
 
   const User = mongoose.models.Users || mongoose.model("Users", userSchema);
