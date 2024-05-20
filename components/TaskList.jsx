@@ -92,6 +92,7 @@ const rows = [
     Points: "2 Ultimate Points",
     de1: "Earn 2 points for every Degen token held, rounded up, every 24 hours.",
     de2: "per DEGEN",
+    inEnded : true,
    
   },
   
