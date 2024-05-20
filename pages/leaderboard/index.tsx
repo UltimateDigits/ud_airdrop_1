@@ -81,7 +81,7 @@ const Leaderboard = () => {
                     <caption className="px-8 pt-10 text-[36px] text-left rtl:text-right text-white bg-gradient-to-l from-[#2070f42b] to-[#c6dbff30]">
                         Leaderboard for <span className="font-bold">Season 1</span>
                         <p className="mb-3 mt-7 text-[10px] text-white sm:text-lg">
-                            In Season 1 of the Ultimate Points Program, users will be airdropped 12% of $ULT&apos;s circulating supply on launch, based on accumulated Ultimate Points.
+                            In Season 2 of the Ultimate Points Program, users will be airdropped 12% of $ULT&apos;s circulating supply on launch, based on accumulated Ultimate Points.
                         </p>
                         <hr className="mt-10 mb-5" />
                     </caption>

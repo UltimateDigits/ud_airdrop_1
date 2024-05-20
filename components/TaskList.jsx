@@ -707,7 +707,7 @@ const TaskList = () => {
         <div className="relative w-[70%] overflow-x-auto shadow-md sm:rounded-lg">
           <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <caption className="px-8 pt-10 text-[42px] text-left text-white">
-              Quests for Season 1
+              Quests for Season 2
               <hr className="mt-10 mb-5 border-gray-400" />
             </caption>
             <thead className="text-[22px] text-gray-100">

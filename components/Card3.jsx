@@ -33,7 +33,7 @@ const Card3 = () => {
   return (
     <div className="w-[70%] bg-gradient-to-r from-[#2070f42b] to-[#c6dbff30] text-left p-4 rounded-lg shadow sm:p-8 mb-[40px]">
       <h3 className="text-[30px] text-white">
-        Your Ultimate Points <span className="font-bold">[Season 1]</span>
+        Your Ultimate Points <span className="font-bold">[Season 2]</span>
       </h3>
       <div className="my-4 flex justify-between items-center">
         <p className="text-[52px] font-bold text-white">
