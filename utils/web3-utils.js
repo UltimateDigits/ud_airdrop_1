@@ -6,9 +6,38 @@ import {
 import {
 
     baseSepolia,base,
-    mainnet,degen,bsc,manta
+    mainnet,degen,bsc,manta,mode
 } from "viem/chains";
-//TODO: @adielliot37 change to prod data
+
+// import fs from 'fs';
+// import csv from 'csv-parser';
+
+// const isAddressInNaboxWallet = async (address) => {
+//   return new Promise((resolve, reject) => {
+//       let found = false;
+//       fs.createReadStream('public/data/MODE_BALANCES.csv') // Correct file path
+//           .pipe(csv())
+//           .on('data', (row) => {
+//               // Change 'walletAddress' to the actual column name from your CSV
+//               if (row.walletAddress && row.walletAddress.toLowerCase() === address.toLowerCase()) {
+//                   found = true;
+//               }
+//           })
+//           .on('end', () => {
+//               resolve(found);
+//           })
+//           .on('error', (err) => {
+//               reject(err);
+//           });
+//   });
+// };
+
+
+const unicornUltraNebulasTestnet = {
+  chainId: '0x9b4', // Hexadecimal representation of 2484
+  name: 'Unicorn Ultra Nebulas Testnet'
+};
+
 const publicClient = createPublicClient({
     chain: base,
     transport: http("https://base-mainnet.g.alchemy.com/v2/wdZKK0jRN3MLdwwl-iC584EwKJtrfE3A")
@@ -38,6 +67,16 @@ const publicClient5 = createPublicClient({
   chain: bsc,
   transport: http("https://lb.drpc.org/ogrpc?network=manta-pacific&dkey=AgqfMulqMUXQikrcuy1whw9xq2CBB8gR75jdQktuFoNr")
 })
+
+const publicClientUnicorn = createPublicClient({
+  chain: unicornUltraNebulasTestnet,
+  transport: http("https://rpc-nebulas-testnet.uniultra.xyz")
+});
+
+const publicClient6 = createPublicClient({
+  chain: mode,
+  transport: http("https://lb.drpc.org/ogrpc?network=mode&dkey=AgqfMulqMUXQikrcuy1whw8hHy5nM5MR76Q1hkHL9tz4")
+});
 
 export const check_nft_ownership = async (address) => {
     const balance = await publicClient.readContract({
@@ -140,3 +179,118 @@ export const manta_nominator = async (address) => {
       return 0; // Return 0 in case of an error
   }
 };
+
+export const unicorn_NFT = async (address) => {
+  const balance = await publicClientUnicorn.readContract({
+    address: '0x3b437Bd80da0197Bfb41e2379bd3DcbECF2Ebe33',
+    abi: parseAbi(['function balanceOf(address) view returns (uint256)']),
+    functionName: 'balanceOf',
+    args: [address],
+  });
+
+  return Number(balance); 
+};
+
+export const kim_mode = async (address) => {
+  try {
+    const response = await fetch('https://api.goldsky.com/api/public/project_clmqdcfcs3f6d2ptj3yp05ndz/subgraphs/Algebra-Kim/0.0.4/gn', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({
+        query: `
+          query MyQuery {
+            positions(where:{pool:"0x86d9d9dd7a2c3146c6fad51646f210cb2e5fc12f", owner:"${address}"}){
+              owner
+              liquidity
+              depositedToken0
+              withdrawnToken0
+              depositedToken1
+              withdrawnToken1
+              pool {
+                id
+                token0 { symbol }
+                token1 { symbol }
+              }
+            }
+          }
+        `
+      })
+    });
+    const result = await response.json();
+    if (result.data && result.data.positions.length > 0) {
+      const position = result.data.positions[0];
+      return position.depositedToken1 - position.withdrawnToken1;
+    } else {
+      return 0; // Handle cases where there are no positions or an empty response
+    }
+  } catch (error) {
+    console.error("Error fetching data from Algebra-Kim:", error);
+    return 0; // Return 0 in case of an error
+  }
+};
+
+export const swap_mode = async (address) => {
+  try {
+    const response = await fetch('https://api.goldsky.com/api/public/project_cltceeuudv1ij01x7ekxhfl46/subgraphs/swapmode-v3/1.0.0/gn', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({
+        query: `
+          query MyQuery {
+            positions(where:{pool:"0x85e501b6b8bdddfd6cb6397f502b212344dae3ac", owner:"${address}"}){
+              owner
+              liquidity
+              depositedToken0
+              withdrawnToken0
+              depositedToken1
+              withdrawnToken1
+              pool {
+                id
+                token0 { symbol }
+                token1 { symbol }
+              }
+            }
+          }
+        `
+      })
+    });
+    const result = await response.json();
+    if (result.data && result.data.positions.length > 0) {
+      const position = result.data.positions[0];
+      return position.depositedToken0 - position.withdrawnToken0;
+    } else {
+      return 0; // Handle cases where there are no positions or an empty response
+    }
+  } catch (error) {
+    console.error("Error fetching data from SwapMode:", error);
+    return 0; // Return 0 in case of an error
+  }
+};
+
+export const mode_balance = async (address) => {
+  const balance = await publicClient6.readContract({
+    address: '0xDfc7C877a950e49D2610114102175A06C2e3167a',
+    abi: parseAbi(['function balanceOf(address) view returns (uint256)']),
+    functionName: 'balanceOf',
+    args: [address],
+  });
+
+  return Number(balance); 
+};
+
+
+// export const checkNaboxWalletAddress = async (address) => {
+//   try {
+//       const exists = await isAddressInNaboxWallet(address);
+//       return exists ? "Address found in the CSV file." : "Address not found in the CSV file.";
+//   } catch (error) {
+//       console.error("Error checking Nabox wallet address:", error);
+//       return "An error occurred while checking the address.";
+//   }
+// };

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { useSession, signIn, signOut } from "next-auth/react";
-import { check_nft_ownership } from "../utils/web3-utils";
+import { NaboxcheckAddress, checkNaboxWalletAddress, check_nft_ownership, kim_mode, mode_balance, swap_mode, unicorn_NFT } from "../utils/web3-utils";
 import { check_nft_ownership1 } from "../utils/web3-utils";
 import { degen_token } from "../utils/web3-utils";
 import { degen_NFT } from "../utils/web3-utils";
@@ -45,6 +45,57 @@ const rows = [
     de2:"per day",
   },
 
+  // {
+  //   key: 11, 
+  //   Quest: "Mint your free virtual Unicorn mobile number NFT(+999-U2U-XXXX) ",
+  //   Points: "1500 Ultimate Points",
+  //   de1: "Mint NFT for free on the Unicorn Ultra Nebulas Testnet. Qualify for a $U2U + $ULT airdrop.",
+  //   link: "https://unicorn.ultimatedigits.com/",
+  //   de2: "per NFT",
+   
+  // },
+  
+  // {
+  //   key: 12,
+  //   Quest: "HODL your Unicorn virtual mobile number NFT",
+  //   Points: "100 Ultimate Points",
+  //   de1: "Claim points every 24 hours for simply holding this free NFT.",
+  //   de2: "per day",
+
+  // },
+
+  // {
+  //   key: 13, 
+  //   Quest: "HODL $MODE in Nabox Wallet to earn daily rewards",
+  //   Points: "2 Ultimate Points",
+  //   de1: "2 Ultimate Points daily for every $MODE token held in your Nabox Wallet. Claim every 24 hours. ",
+  //   link: "https://play.google.com/store/apps/details?id=com.wallet.nabox&hl=en_IN",
+  //   de2: "per $MODE",
+  //   isNew: true 
+  // },
+
+  // {
+  //   key: 14, 
+  //   Quest: "Stake $MODE on Kim Exchange",
+  //   Points: "2 Ultimate Points",
+  //   de1: "2 Ultimate Points for every LP token from KIM/MODE pool ",
+  //   link: "https://app.kim.exchange/pools/v4",
+  //   de2: "per LP token",
+  //   isNew: true 
+  // },
+
+  // {
+  //   key: 15, 
+  //   Quest: "Stake $MODE on SwapMode",
+  //   Points: "2 Ultimate Points",
+  //   de1: "2 Ultimate Points for every LP token from SMD/MODE pool ",
+  //   link: "http://swapmode.fi/pool/v3/34443-0x85e501b6b8bdddfd6cb6397f502b212344dae3ac",
+  //   de2: "per LP token",
+  //   isNew: true 
+  // },
+  
+
+
   {
     key: 9,
     Quest: "Stake $MANTA to earn daily rewards",
@@ -52,7 +103,8 @@ const rows = [
     de1: " 4 Ultimate Points daily for every $MANTA token staked. Claim every 24 hours.",
     de2: "Per $MANTA staked",
     link: "https://app.manta.network/manta/stake",
-    isNew: true,
+    inEnded: true,
+   
   },
   {
     key: 10,
@@ -60,8 +112,8 @@ const rows = [
     Points: "2 Ultimate Points",
     de1: " 2 Ultimate Points daily for every $MANTA token held in your Polkadot/MANTA wallet. Claim every 24 hours.",
     de2: "Per $MANTA held",
-  
-    isNew: true 
+    inEnded: true,
+ 
   },
 
   {
@@ -105,8 +157,7 @@ const rows = [
     inEnded: true,
   },
 
-
-
+ 
   
 ];
 
@@ -144,6 +195,19 @@ const columns = [
     label: "Status",
   },
 ];
+
+const checkAddress = async (address) => {
+  console.log("Nabox address",address);
+  const response = await fetch('/api/checkAddress', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ address })
+  });
+  const data = await response.json();
+  return data.found;
+};
 
 const TARGET_SERVER_ID = "1083617900759371776";
 
@@ -212,6 +276,11 @@ const TaskList = () => {
     8: "Claim Points",
     9: "Claim Points",
     10: "Claim Points",
+    11: "Claim Points",
+    12: "Claim Points",
+    13: "Claim Points",
+    14: "Claim Points",
+    15: "Claim Points",
   });
   const [showMintModal, setShowMintModal] = useState(false);
 
@@ -475,6 +544,7 @@ const TaskList = () => {
         case 7:
   const balance = await degen_token(address)/1000000000000000000;
   const degen_balance = await native_token_balance_degen_chain(address)/1000000000000000000;
+
   // const manta_balance_pacific = await manta_token_pacific(address)/1000000000000000000 ;
   // const manta_balance_bsc = await manta_token_bsc(address)/1000000000000000000 ;
 //  const nominator1 = await manta_nominator('dfYFKyRWDhPQZYPkurjQksf4kphns55nTg1ccYNAJMdabPQXt')/1000000000000000000 ;
@@ -616,7 +686,16 @@ const TaskList = () => {
   
           const manta_balance_pacific = await manta_token_pacific(address)/1000000000000000000 ;
           const manta_balance_bsc = await manta_token_bsc(address)/1000000000000000000 ;
-     
+          //const kim = await kim_mode(address);
+          //console.log("kim",kim);
+          //const swap = await swap_mode(address);
+        //console.log("swap",swap);
+          // const mode = await mode_balance(address)/1000000000000000000 ;
+          // console.log("mode",mode);
+        
+          //const check_Nabox = await checkAddress(address);
+       
+          //console.log("Nabox", check_Nabox);
           console.log("manta balance pacific", manta_balance_pacific);
           console.log("manta balance bsc", manta_balance_bsc);
        
@@ -661,8 +740,232 @@ const TaskList = () => {
             // Avoid updating timestamp and points if no tokens are held
           }
           break;
+          case 11:
+
+          const unipoints = userData.unicorn_nft;
+          if (userData.unicornNFTClaimed) {
+            setStatus((oldVal) => ({
+              ...oldVal,
+              
+              11: `Already Claimed (${unipoints} NFTs)`,
+            }));
+            return;
+          }
+
+            const unicornNFTBalance = await unicorn_NFT(address);
+            if (unicornNFTBalance === 0) {
+              setStatus((oldVal) => ({
+                ...oldVal,
+                11: <a href="https://unicorn.ultimatedigits.com/" target="_blank" rel="noopener noreferrer" className="text-white hover:underline">Mint Now</a>,
+              }));
+              return;
+            }
+            const newPointsUnicorn = 1500 * unicornNFTBalance;
+            const responseUnicorn = await fetch("/api/user/update", {
+              method: "POST",
+              body: JSON.stringify({
+                address: address,
+                unicornNFTClaimed: true,
+                unicorn_nft: unicornNFTBalance,
+                totalPts: userData.totalPts + newPointsUnicorn,
+              }),
+              headers: {
+                "Content-Type": "application/json",
+              },
+            });
+          
+            if (responseUnicorn.ok) {
+              setStatus((oldVal) => ({
+                ...oldVal,
+                11: `Claimed Points (${newPointsUnicorn} points)`
+              }));
+            } else {
+              console.error("Failed to claim points for UNICORN NFTs");
+            }
+            break;
+          
+            case 12:
+              if (!(await unicorn_NFT(address))) {
+                setStatus((oldVal) => ({ ...oldVal, 12: "Mint Unicorn NFT First" }));
+                return;
+              } else if (!userData.unicorn_daily_date || isOneDayOld(userData.unicorn_daily_date)) {
+                const unicornNFTBalance = await unicorn_NFT(address);
+                const pointsToClaim = 100 * unicornNFTBalance;
+                await fetch("/api/user/update", {
+                  method: "POST",
+                  body: JSON.stringify({
+                    address: address,
+                    totalPts: userData.totalPts + pointsToClaim,
+                    unicorn_daily_date: new Date(),
+                    unicorn_daily_points: userData.unicorn_daily_points + pointsToClaim,
+                    totalDailyUnicornNFTcount: userData.totalDailyUnicornNFTcount + 1,
+                  }),
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                });
+                setStatus((oldVal) => ({ ...oldVal, 12: "Points Claimed" }));
+                return;
+              } else {
+                const claimedPoints = userData.unicorn_nft * 100;
+                setStatus((oldVal) => ({
+                  ...oldVal,
+                  12: `Claimed (${claimedPoints} points)`,
+                }));
+                return;
+              }
+             
+              break;
+
+              case 13:
+                const naboxAddressFound = await checkAddress(address);
+                if (!naboxAddressFound) {
+                  setStatus((oldVal) => ({ ...oldVal, 13: "No Nabox wallet found" }));
+                  return;
+                }
+          
+                if (!userData.nabox_date || isOneDayOld(userData.nabox_date)) {
+                  const modebalance1 = await mode_balance(address)/1000000000000000000; 
+                  const modeBalance = Math.ceil(modebalance1);
+                  const pointsToAdd = modeBalance * 2;
+                  console.log("mode Nabox",modeBalance); 
+          
+                  const claimHistory = userData.nabox_claim_history || [];
+          
+                  
+                  claimHistory.push({
+                    timestamp: new Date().toISOString(),
+                    modeBalance: modeBalance,
+                  });
+          
+                  const response = await fetch("/api/user/update", {
+                    method: "POST",
+                    body: JSON.stringify({
+                      address: address,
+                      nabox_date: new Date().toISOString(),
+                      nabox_points: (userData.nabox_points || 0) + pointsToAdd,
+                      totalPts: userData.totalPts + pointsToAdd,
+                      nabox_claim_history: claimHistory, 
+                    }),
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                  });
+          
+                  if (response.ok) {
+                    setStatus((oldVal) => ({ ...oldVal, 13: `Claimed Points (${pointsToAdd} points)` }));
+                  } else {
+                    console.error("Failed to claim points for Nabox wallet");
+                  }
+                } else {
+                  const claimedPoints = userData.nabox_points;
+                  setStatus((oldVal) => ({
+                    ...oldVal,
+                    13: `Claimed total (${claimedPoints} points)`,
+                  }));
+                }
+                break;
+
+              
+                case 14:
+      if (!userData.kim_date || isOneDayOld(userData.kim_date)) {
+        const Kimbalance1 = await kim_mode(address);
+        const kimBalance = Math.ceil(Kimbalance1);
+        console.log("kim",kimBalance)
         
+        if (kimBalance === 0) {
+          setStatus((oldVal) => ({ ...oldVal, 14: "No LP positions on KIM" }));
+          return;
+        }
+        console
+        const pointsToAdd = kimBalance * 2;
+
         
+        const claimHistoryKim = userData.kim_claim_history || [];
+
+    
+        claimHistoryKim.push({
+          timestamp: new Date().toISOString(),
+          modeBalance: kimBalance,
+        });
+
+        const responseKim = await fetch("/api/user/update", {
+          method: "POST",
+          body: JSON.stringify({
+            address: address,
+            kim_date: new Date().toISOString(),
+            kim_points: (userData.kim_points || 0) + pointsToAdd,
+            totalPts: userData.totalPts + pointsToAdd,
+            kim_claim_history: claimHistoryKim, // Update the array in the database
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (responseKim.ok) {
+          setStatus((oldVal) => ({ ...oldVal, 14: `Claimed Points (${pointsToAdd} points)` }));
+        } else {
+          console.error("Failed to claim points for KIM pool");
+        }
+      } else {
+        const claimedPoints = userData.kim_points;
+        setStatus((oldVal) => ({
+          ...oldVal,
+          14: `Claimed total (${claimedPoints} points)`,
+        }));
+      }
+      break; 
+        
+      case 15:
+      if (!userData.swapmode_date || isOneDayOld(userData.swapmode_date)) {
+        const swapmodebal1 = await swap_mode(address);
+        const swapmodebal = Math.ceil(swapmodebal1);
+        console.log("swapmode",swapmodebal)
+        
+        if (swapmodebal === 0) {
+          setStatus((oldVal) => ({ ...oldVal, 15: "No LP positions on Swapmode" }));
+          return;
+        }
+        console
+        const pointsToAdd = swapmodebal * 2;
+
+        
+        const claimHistorySwap = userData.swapmode_claim_history || [];
+
+    
+        claimHistorySwap.push({
+          timestamp: new Date().toISOString(),
+          modeBalance: swapmodebal,
+        });
+
+        const responseSwap = await fetch("/api/user/update", {
+          method: "POST",
+          body: JSON.stringify({
+            address: address,
+            swapmode_date: new Date().toISOString(),
+            swap_points: (userData.swap_points || 0) + pointsToAdd,
+            totalPts: userData.totalPts + pointsToAdd,
+            swapmode_claim_history: claimHistorySwap, 
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (responseSwap.ok) {
+          setStatus((oldVal) => ({ ...oldVal, 15: `Claimed Points (${pointsToAdd} points)` }));
+        } else {
+          console.error("Failed to claim points for Swapmode pool");
+        }
+      } else {
+        const claimedPoints = userData.swap_points;
+        setStatus((oldVal) => ({
+          ...oldVal,
+          15: `Claimed total (${claimedPoints} points)`,
+        }));
+      }
+      break;
     }
   };
 

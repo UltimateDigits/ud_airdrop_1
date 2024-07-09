@@ -22,6 +22,19 @@ export const connect = async () => {
     }
   });
 
+  const NaboxclaimHistorySchema = new mongoose.Schema({
+    timestamp: {
+      type: Date,
+      required: true,
+      default: Date.now,
+    },
+    modeBalance: {
+      type: Number,
+      required: true,
+    },
+  });
+
+
   const userSchema = new mongoose.Schema({
     address: {
       type: String,
@@ -62,6 +75,23 @@ export const connect = async () => {
     manta_date: { type: Date, default: null },
     manta_points:{ type: Number, default: 0 },
     total_manta:{ type: Number, default: 0 },
+    unicorn_nft:{ type: Number, default: 0 },
+    unicornNFTClaimed: { type: Boolean, default: false },
+    unicorn_daily_date: { type: Date, default: null },
+    unicorn_daily_points:{ type: Number, default: 0 },
+    totalDailyUnicornNFTcount:{ type: Number, default: 0 },
+    nabox_date: { type: Date, default: null },
+    nabox_points: { type: Number, default: 0 },
+    nabox_claim_history: [NaboxclaimHistorySchema], 
+    kim_date: { type: Date, default: null },
+    kim_points: { type: Number, default: 0 },
+    kim_claim_history: [NaboxclaimHistorySchema], 
+    swapmode_date: { type: Date, default: null },
+    swapmode_points: { type: Number, default: 0 },
+    swapmode_claim_history: [NaboxclaimHistorySchema], 
+
+
+
 
   });
 

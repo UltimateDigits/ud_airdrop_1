@@ -14,7 +14,7 @@ const Card3 = () => {
         console.log("card-response:", response);
         console.log("address:", address);
         const data = await response.json();
-        console.log("data:", data);
+     //   console.log("data:", data);
         setPoints(data.totalPts); // Assuming 'totalPts' is the field in your returned json
       } catch (error) {
         console.error("Failed to fetch points:", error);
