@@ -45,24 +45,26 @@ const rows = [
     de2:"per day",
   },
 
-  // {
-  //   key: 11, 
-  //   Quest: "Mint your free virtual Unicorn mobile number NFT(+999-U2U-XXXX) ",
-  //   Points: "1500 Ultimate Points",
-  //   de1: "Mint NFT for free on the Unicorn Ultra Nebulas Testnet. Qualify for a $U2U + $ULT airdrop.",
-  //   link: "https://unicorn.ultimatedigits.com/",
-  //   de2: "per NFT",
+  {
+    key: 11, 
+    Quest: "Mint your free virtual Unicorn mobile number NFT(+999-U2U-XXXX) ",
+    Points: "1500 Ultimate Points",
+    de1: "Mint NFT for free on the Unicorn Ultra Nebulas Testnet. Qualify for a $U2U + $ULT airdrop.",
+    link: "https://unicorn.ultimatedigits.com/",
+    de2: "per NFT",
+    isNew: true,
    
-  // },
+  },
   
-  // {
-  //   key: 12,
-  //   Quest: "HODL your Unicorn virtual mobile number NFT",
-  //   Points: "100 Ultimate Points",
-  //   de1: "Claim points every 24 hours for simply holding this free NFT.",
-  //   de2: "per day",
+  {
+    key: 12,
+    Quest: "HODL your Unicorn virtual mobile number NFT",
+    Points: "100 Ultimate Points",
+    de1: "Claim points every 24 hours for simply holding this free NFT.",
+    de2: "per day",
+    isNew: true,
 
-  // },
+  },
 
   // {
   //   key: 13, 
