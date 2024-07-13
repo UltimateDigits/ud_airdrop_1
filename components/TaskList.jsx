@@ -50,7 +50,7 @@ const rows = [
     Quest: "Mint your free virtual Unicorn mobile number NFT(+999-U2U-XXXX) ",
     Points: "1500 Ultimate Points",
     de1: "Mint NFT for free on the Unicorn Ultra Nebulas Testnet. Qualify for a $U2U + $ULT airdrop.",
-    link: "https://unicorn.ultimatedigits.com/",
+    link: "u2unetwork.ultimatedigits.com",
     de2: "per NFT",
     isNew: true,
    
@@ -758,7 +758,7 @@ const TaskList = () => {
             if (unicornNFTBalance === 0) {
               setStatus((oldVal) => ({
                 ...oldVal,
-                11: <a href="https://unicorn.ultimatedigits.com/" target="_blank" rel="noopener noreferrer" className="text-white hover:underline">Mint Now</a>,
+                11: <a href="u2unetwork.ultimatedigits.com" target="_blank" rel="noopener noreferrer" className="text-white hover:underline">Mint Now</a>,
               }));
               return;
             }
