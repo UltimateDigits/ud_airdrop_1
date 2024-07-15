@@ -743,49 +743,59 @@ const TaskList = () => {
           }
           break;
           case 11:
-
-          const unipoints = userData.unicorn_nft;
-          if (userData.unicornNFTClaimed) {
-            setStatus((oldVal) => ({
-              ...oldVal,
-              
-              11: `Already Claimed (${unipoints} NFTs)`,
-            }));
-            return;
-          }
-
+            const unipoints = userData.unicorn_nft || 0; // Default to 0 if not defined
+            const previouslyClaimed = userData.unicornNFTClaimed || false;
+          
+            // Fetch the current balance of NFTs
             const unicornNFTBalance = await unicorn_NFT(address);
-            if (unicornNFTBalance === 0) {
+          
+            // If no new NFTs have been purchased and already claimed, update status and return
+            if (previouslyClaimed && unicornNFTBalance <= unipoints) {
               setStatus((oldVal) => ({
                 ...oldVal,
-                11: <a href="u2unetwork.ultimatedigits.com" target="_blank" rel="noopener noreferrer" className="text-white hover:underline">Mint Now</a>,
+                11: `Already Claimed (${unipoints} NFTs)`,
               }));
               return;
             }
-            const newPointsUnicorn = 1500 * unicornNFTBalance;
+          
+            // Calculate new NFTs acquired since the last claim
+            const newNFTs = unicornNFTBalance - unipoints;
+            const newPointsUnicorn = 1500 * newNFTs;
+          
+            const payload = {
+              address: address,
+              unicornNFTClaimed: true, // Update to true after successful claim
+              unicorn_nft: unicornNFTBalance, // Update the total number of NFTs
+              totalPts: userData.totalPts + newPointsUnicorn,
+            };
+          //  console.log("Request payload:", JSON.stringify(payload));
+          
+            // Update the user data on the server
             const responseUnicorn = await fetch("/api/user/update", {
               method: "POST",
-              body: JSON.stringify({
-                address: address,
-                unicornNFTClaimed: true,
-                unicorn_nft: unicornNFTBalance,
-                totalPts: userData.totalPts + newPointsUnicorn,
-              }),
+              body: JSON.stringify(payload),
               headers: {
                 "Content-Type": "application/json",
               },
             });
           
-            if (responseUnicorn.ok) {
+            // Check the response status and log it
+            if (!responseUnicorn.ok) {
+              console.error("Failed to claim points for UNICORN NFTs", responseUnicorn.status, responseUnicorn.statusText);
+              const errorData = await responseUnicorn.json();
+              console.error("Error details:", errorData);
+            } else {
+              const responseData = await responseUnicorn.json();
+              console.log("Server response:", responseData);
+          
+              // Update the UI based on the response
               setStatus((oldVal) => ({
                 ...oldVal,
                 11: `Claimed Points (${newPointsUnicorn} points)`
               }));
-            } else {
-              console.error("Failed to claim points for UNICORN NFTs");
             }
             break;
-          
+                    
             case 12:
               if (!(await unicorn_NFT(address))) {
                 setStatus((oldVal) => ({ ...oldVal, 12: "Mint Unicorn NFT First" }));
