@@ -13,6 +13,7 @@ import { Session } from "next-auth";
 import fav from "./favicon.ico";
 import { StaticImageData } from "next/image";
 import ScreenSizeWarning from "../components/ScreenSizeWarning";
+import Popup from "../components/Popup";
 interface CustomSession extends Session {
   accessToken?: string; // Define the accessToken property
 }
@@ -20,6 +21,7 @@ interface CustomSession extends Session {
 const Home = () => {
   const { isConnected, address } = useAccount();
   const [targetServer, setTargetServer] = useState(false);
+  const [showPopup, setShowPopup] = useState(true);
 
   const { data: session } = useSession();
   const customSession = session as CustomSession;
@@ -74,6 +76,13 @@ const Home = () => {
         />
       </Head>
       <main className={styles.main}>
+        {showPopup && (
+          <Popup
+            heading="Announcement"
+            message="Gm! Season 2 of the Ultimate Points Airdrop has ended. Thank you for your participation. Please stay tuned across our socials for updates and next steps!"
+            onClose={() => setShowPopup(false)}
+          />
+        )}
         <Card3 />
         <Card1 />
         <Card2 />

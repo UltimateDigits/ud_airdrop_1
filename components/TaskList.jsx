@@ -18,6 +18,7 @@ const rows = [
     Points: "100 Ultimate Points",
     de1: "Join and get verified on Discord.",
     link: "https://discord.gg/amewkxzs7J",
+    inEnded: true,
   },
   {
     key: 2,
@@ -26,6 +27,7 @@ const rows = [
     de1: "Type /gm and paste your wallet address.",
     de2: "per day",
     actionLink: "https://discord.com/channels/1083617900759371776/1088848310854496337",
+    inEnded: true,
   },
 
 
@@ -35,6 +37,7 @@ const rows = [
     Points: "100 Ultimate Points",
     de1:"Free mint on Base. You can get gas token from Stargate Finance.",
     link: "https://stargate.finance/transfer",
+    inEnded: true,
   },
   {
     key: 4,
@@ -43,6 +46,7 @@ const rows = [
     de1:"Free mint on Base. You can get gas token from Stargate Finance.",
     link: "https://stargate.finance/transfer",
     de2:"per day",
+    inEnded: true,
   },
 
   {
@@ -52,7 +56,8 @@ const rows = [
     de1: "Mint NFT for free on the Unicorn Ultra Nebulas Testnet. Qualify for a $U2U + $ULT airdrop.",
     link: "https://u2unetwork.ultimatedigits.com",
     de2: "per NFT",
-    isNew: true,
+   
+    inEnded: true,
    
   },
   
@@ -62,7 +67,8 @@ const rows = [
     Points: "100 Ultimate Points",
     de1: "Claim points every 24 hours for simply holding this free NFT.",
     de2: "per day",
-    isNew: true,
+    
+    inEnded: true,
 
   },
 
@@ -125,6 +131,7 @@ const rows = [
     de1: "Mint NFT on Degen Chain and earn a $DEGEN + $ULT airdrop.",
     link: "https://degen.ultimatedigits.com/", 
     de2: "per NFT",
+    inEnded: true,
    
   },
 

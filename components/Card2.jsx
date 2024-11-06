@@ -14,7 +14,7 @@ const Card2 = () => {
       setShowConnectWalletMessage(true);
       setTimeout(() => {
         setShowConnectWalletMessage(false);
-      }, 5000); // Message disappears after 5 seconds
+      }, 5000); 
     }
   };
 
@@ -38,7 +38,7 @@ const Card2 = () => {
           </Snippet>
         ) : (
           <button
-            onClick={handleReferClick}
+            // onClick={handleReferClick}
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           >
             Refer Now
